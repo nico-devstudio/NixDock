@@ -8,7 +8,7 @@ export default function RootLayout() {
     <>
       <Header />
       <Sidebar />
-      <main className="bg-white p-8 ml-60 mt-20">
+      <main className="bg-white p-8 ml-40 md:ml-60 mt-20">
         <Dashboard />
       </main>
     </>
