@@ -99,15 +99,15 @@ export default function Dashboard() {
         <section className="mt-10">
           <h2 className={h2Style}>Recent Deliverables</h2>
           <div className="space-y-2 mt-5">
-            <div className={`${container} p-3`}>
+            <div className={`${container} p-3 max-md:flex-col`}>
               <p>Homepage Design</p>
               <p className={`${mutedText} shrink-0`}>Sep 15</p>
             </div>
-            <div className={`${container} p-3`}>
+            <div className={`${container} p-3 max-md:flex-col`}>
               <p>Logo Package</p>
               <p className={`${mutedText} shrink-0`}>Sep 12</p>
             </div>
-            <div className={`${container} p-3`}>
+            <div className={`${container} p-3 max-md:flex-col`}>
               <p>Mobile App Prototype</p>
               <p className={`${mutedText} shrink-0`}>Sep 10</p>
             </div>
