@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { projects } from "../data/projects";
 import { clients } from "../data/clients";
+import { tasks } from "../data/tasks";
 
 export default function Project() {
   const { id } = useParams();
@@ -11,6 +12,9 @@ export default function Project() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
   const projDetails = "flex justify-between";
   const projDetailLabel = "text-gray-500";
+  const projTasks = project
+    ? tasks.filter((task) => task.projectId === project.id)
+    : [];
 
   return (
     <>
@@ -73,6 +77,44 @@ export default function Project() {
                 </p>
               </div>
             </div>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-gray-900 my-5">Tasks</h2>
+            <ul className="flex flex-col gap-2">
+              {projTasks.map((task) => (
+                <li key={task.id}>
+                  <Link
+                    to={`/tasks/${task.id}`}
+                    className="justify-between flex border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
+                  >
+                    <div className="flex flex-col gap-2">
+                      <p className="text-gray-800 font-medium text-base">
+                        {task.name}
+                      </p>
+                      <p
+                        className={
+                          task.status === "Completed"
+                            ? `bg-green-100 text-green-700 ${projStatus}`
+                            : task.status === "In Progress"
+                              ? `bg-blue-100 text-blue-700 ${projStatus}`
+                              : `bg-gray-100 text-gray-600 ${projStatus}`
+                        }
+                      >
+                        {task.status}
+                      </p>
+                    </div>
+                    <p className="self-center text-sm text-gray-500">
+                      {new Date(task.deadline).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
       ) : (

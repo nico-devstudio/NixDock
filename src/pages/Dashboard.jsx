@@ -1,3 +1,7 @@
+import { clients } from "../data/clients";
+import { projects } from "../data/projects";
+import { tasks } from "../data/tasks";
+
 export default function Dashboard() {
   const cardsStyle =
     "border border-gray-200 rounded-xl p-6 text-sm text-gray-500 hover:border-gray-300 hover:shadow-sm transition flex-1";
@@ -9,6 +13,9 @@ export default function Dashboard() {
   const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full w-full mt-3";
   const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
   const h2Style = "text-lg font-medium text-gray-800";
+  const activeProjects = projects.filter(
+    (project) => project.status !== "Completed",
+  );
 
   return (
     <>
@@ -24,49 +31,38 @@ export default function Dashboard() {
         <section className="flex flex-col gap-4 md:flex-row">
           <div className={cardsStyle}>
             <p>Clients</p>
-            <strong className={numbersStyle}>8</strong>
+            <strong className={numbersStyle}>{clients.length}</strong>
           </div>
           <div className={cardsStyle}>
             <p>Projects</p>
-            <strong className={numbersStyle}>4</strong>
+            <strong className={numbersStyle}>{projects.length}</strong>
           </div>
           <div className={cardsStyle}>
             <p>Tasks</p>
-            <strong className={numbersStyle}>12</strong>
+            <strong className={numbersStyle}>{tasks.length}</strong>
           </div>
         </section>
 
         <section className="mt-10">
           <h2 className={h2Style}>Active Projects</h2>
-          <div className="space-y-5 mt-5">
-            <div>
-              <div className={`${container} p-5`}>
-                <p className={activeProjectTitleStyle}>Website Redesign</p>
-                <p className={`${mutedText} shrink-0`}>70%</p>
-              </div>
-              <div className={actProjOuterProgStyle}>
-                <div className={`${actProjInnerProgStyle} w-[70%]`}></div>
-              </div>
-            </div>
-            <div>
-              <div className={`${container} p-5`}>
-                <p className={activeProjectTitleStyle}>Mobile App</p>
-                <p className={`${mutedText} shrink-0`}>45%</p>
-              </div>
-              <div className={actProjOuterProgStyle}>
-                <div className={`${actProjInnerProgStyle} w-[45%]`}></div>
-              </div>
-            </div>
-            <div>
-              <div className={`${container} p-5`}>
-                <p className={activeProjectTitleStyle}>Portfolio Website</p>
-                <p className={`${mutedText} shrink-0`}>90%</p>
-              </div>
-              <div className={actProjOuterProgStyle}>
-                <div className={`${actProjInnerProgStyle} w-[90%]`}></div>
-              </div>
-            </div>
-          </div>
+          <ul className="space-y-5 mt-5">
+            {activeProjects.map((activeProj) => (
+              <li key={activeProj.id}>
+                <div className={`${container} p-5`}>
+                  <p className={activeProjectTitleStyle}>{activeProj.name}</p>
+                  <p className={`${mutedText} shrink-0`}>
+                    {activeProj.progress}%
+                  </p>
+                </div>
+                <div className={actProjOuterProgStyle}>
+                  <div
+                    className={actProjInnerProgStyle}
+                    style={{ width: `${activeProj.progress}%` }}
+                  ></div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="mt-10">

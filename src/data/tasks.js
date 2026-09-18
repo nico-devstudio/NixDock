@@ -34,4 +34,10 @@ export const tasks = [{
     name: "Polish checkout UI",
     status: "To Do",
     deadline: "2026-09-26",
-}]
+}, {
+    id: 7,
+    projectId: 1,
+    name: "Build Header",
+    status: "Completed",
+    deadline: "2026-09-21",
+},]
