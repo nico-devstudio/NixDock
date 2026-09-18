@@ -1,6 +1,7 @@
 import { clients } from "../data/clients";
 import { projects } from "../data/projects";
 import { tasks } from "../data/tasks";
+import { deliverables } from "../data/deliverables";
 
 export default function Dashboard() {
   const cardsStyle =
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const activeProjects = projects.filter(
     (project) => project.status !== "Completed",
   );
+  const activeTasks = tasks.filter((task) => task.status !== "Completed");
 
   return (
     <>
@@ -67,47 +69,44 @@ export default function Dashboard() {
 
         <section className="mt-10">
           <h2 className={h2Style}>Upcoming Tasks</h2>
-          <div className="space-y-2 mt-5">
-            <div className={`${container} p-3`}>
-              <div className="flex gap-3 min-w-0">
-                <input type="checkbox" />
-                <p className="flex-1">Finish homepage</p>
-              </div>
-              <p className={`${mutedText} shrink-0`}>Today</p>
-            </div>
-            <div className={`${container} p-3`}>
-              <div className="flex gap-3 min-w-0">
-                <input type="checkbox" />
-                <p className="flex-1">Send client revision</p>
-              </div>
-              <p className={`${mutedText} shrink-0`}>Tomorrow</p>
-            </div>
-            <div className={`${container} p-3`}>
-              <div className="flex gap-3  min-w-0">
-                <input type="checkbox" />
-                <p className="flex-1">Deploy project</p>
-              </div>
-              <p className={`${mutedText} shrink-0`}>Sep 20</p>
-            </div>
-          </div>
+          <ul className="space-y-2 mt-5">
+            {activeTasks.map((task) => (
+              <li key={task.id} className={`${container} p-3`}>
+                <div className="flex gap-3 min-w-0">
+                  <input type="checkbox" />
+                  <p className="flex-1">{task.name}</p>
+                </div>
+                <p className={`${mutedText} shrink-0`}>
+                  {new Date(task.deadline).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="mt-10">
           <h2 className={h2Style}>Recent Deliverables</h2>
-          <div className="space-y-2 mt-5">
-            <div className={`${container} p-3 max-md:flex-col`}>
-              <p>Homepage Design</p>
-              <p className={`${mutedText} shrink-0`}>Sep 15</p>
-            </div>
-            <div className={`${container} p-3 max-md:flex-col`}>
-              <p>Logo Package</p>
-              <p className={`${mutedText} shrink-0`}>Sep 12</p>
-            </div>
-            <div className={`${container} p-3 max-md:flex-col`}>
-              <p>Mobile App Prototype</p>
-              <p className={`${mutedText} shrink-0`}>Sep 10</p>
-            </div>
-          </div>
+          <ul className="space-y-2 mt-5">
+            {deliverables.map((deliverable) => (
+              <li
+                key={deliverable.id}
+                className={`${container} p-3 max-md:flex-col`}
+              >
+                <p>{deliverable.name}</p>
+                <p className={`${mutedText} shrink-0`}>
+                  {new Date(deliverable.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
     </>
