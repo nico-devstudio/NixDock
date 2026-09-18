@@ -7,6 +7,7 @@ import Client from "./components/Client";
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import Project from "./pages/Project";
+import Task from "./pages/Task";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "tasks",
         element: <Tasks />,
+      },
+      {
+        path: "tasks/:id",
+        element: <Task />,
       },
     ],
   },

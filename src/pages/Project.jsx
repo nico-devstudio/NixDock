@@ -15,7 +15,7 @@ export default function Project() {
   return (
     <>
       {project ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 max-w-5xl">
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             {project.name}
           </h1>

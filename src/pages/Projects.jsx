@@ -8,7 +8,7 @@ export default function Projects() {
   return (
     <>
       <h1 className="text-2xl font-semibold text-gray-900 mb-5">Projects</h1>
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-3 max-w-5xl">
         {projects.map((project) => {
           const client = clients.find(
             (client) => client.id === project.clientId,

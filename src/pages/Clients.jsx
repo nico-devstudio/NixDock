@@ -25,7 +25,7 @@ export default function Clients() {
         Manage your clients and their projects.
       </p>
 
-      <section className="flex gap-4 flex-col ">
+      <section className="flex gap-4 flex-col max-w-5xl">
         {clients.map((client) => (
           <Link to={`/clients/${client.id}`} key={client.id}>
             <div className={cardsStyle}>
