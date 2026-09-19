@@ -1,6 +1,7 @@
 import { tasks } from "../data/tasks";
 import { projects } from "../data/projects";
 import { Link } from "react-router-dom";
+import { clients } from "../data/clients";
 
 export default function Tasks() {
   const status = "text-xs font-medium px-2.5 py-1 rounded-full";
@@ -13,6 +14,9 @@ export default function Tasks() {
           const project = projects.find(
             (project) => project.id === task.projectId,
           );
+          const client = clients.find(
+            (client) => project && project.clientId === client.id,
+          );
 
           return (
             <li key={task.id}>
@@ -24,9 +28,12 @@ export default function Tasks() {
                   {task.name}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {project ? project.name : "No project."}
+                  {project ? project.name : "No project found."}
                 </p>
-                <div className="flex justify-between items-center">
+                <p className="text-xs text-gray-400">
+                  {client ? client.name : "No client found."}
+                </p>
+                <div className="flex justify-between items-center mt-4">
                   <p
                     className={
                       task.status === "Completed"

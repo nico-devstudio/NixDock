@@ -51,12 +51,16 @@ export default function Dashboard() {
           <ul className="space-y-5 mt-5">
             {activeProjects.map((activeProj) => (
               <li key={activeProj.id}>
-                <div className={`${container} p-5`}>
-                  <p className={activeProjectTitleStyle}>{activeProj.name}</p>
-                  <p className={`${mutedText} shrink-0`}>
-                    {activeProj.progress}%
-                  </p>
-                </div>
+                <Link to={`/projects/${activeProj.id}`}>
+                  <div
+                    className={`${container} p-5 hover:border-gray-300 hover:shadow-sm transition`}
+                  >
+                    <p className={activeProjectTitleStyle}>{activeProj.name}</p>
+                    <p className={`${mutedText} shrink-0`}>
+                      {activeProj.progress}%
+                    </p>
+                  </div>
+                </Link>
                 <div className={actProjOuterProgStyle}>
                   <div
                     className={actProjInnerProgStyle}
@@ -72,18 +76,24 @@ export default function Dashboard() {
           <h2 className={h2Style}>Upcoming Tasks</h2>
           <ul className="space-y-2 mt-5">
             {activeTasks.map((task) => (
-              <li key={task.id} className={`${container} p-3`}>
-                <div className="flex gap-3 min-w-0">
-                  <input type="checkbox" />
-                  <p className="flex-1">{task.name}</p>
-                </div>
-                <p className={`${mutedText} shrink-0`}>
-                  {new Date(task.deadline).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
+              <li
+                key={task.id}
+                className="border border-gray-200 rounded-md p-3 flex gap-3 hover:border-gray-300 hover:shadow-sm transition"
+              >
+                <input type="checkbox" />
+                <Link
+                  to={`/tasks/${task.id}`}
+                  className="flex justify-between flex-1 min-w-0"
+                >
+                  <p>{task.name}</p>
+                  <p className={`${mutedText} shrink-0`}>
+                    {new Date(task.deadline).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                </Link>
               </li>
             ))}
           </ul>

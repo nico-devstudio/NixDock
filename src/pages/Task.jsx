@@ -1,12 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { tasks } from "../data/tasks";
 import { projects } from "../data/projects";
+import { clients } from "../data/clients";
 
 export default function Task() {
   const { id } = useParams();
   const task = tasks.find((task) => task.id === parseInt(id, 10));
   const project =
     task && projects.find((project) => project.id === task.projectId);
+  const client =
+    project && clients.find((client) => project.clientId === client.id);
   const statusStyle = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
 
   return task ? (
@@ -42,6 +45,12 @@ export default function Task() {
             <p className="text-gray-500">Project</p>
             <Link to={`/projects/${task.projectId}`}>
               <p className="hover:text-gray-600">{project.name}</p>
+            </Link>
+          </div>
+          <div className="flex justify-between">
+            <p className="text-gray-500">Client</p>
+            <Link to={`/clients/${client.id}`} className="hover:text-gray-600">
+              <p>{client.name}</p>
             </Link>
           </div>
           <div className="flex justify-between">
