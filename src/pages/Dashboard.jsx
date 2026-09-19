@@ -15,10 +15,15 @@ export default function Dashboard() {
   const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full w-full mt-3";
   const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
   const h2Style = "text-lg font-medium text-gray-800";
+  const viewAllStyle =
+    "text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors";
   const activeProjects = projects.filter(
     (project) => project.status !== "Completed",
   );
   const activeTasks = tasks.filter((task) => task.status !== "Completed");
+  const recentDeliverables = [...deliverables]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
 
   return (
     <>
@@ -47,7 +52,12 @@ export default function Dashboard() {
         </section>
 
         <section className="mt-10">
-          <h2 className={h2Style}>Active Projects</h2>
+          <div className="flex justify-between items-center">
+            <h2 className={h2Style}>Active Projects</h2>
+            <Link to="/projects" className={viewAllStyle}>
+              View all
+            </Link>
+          </div>
           <ul className="space-y-5 mt-5">
             {activeProjects.map((activeProj) => (
               <li key={activeProj.id}>
@@ -73,7 +83,12 @@ export default function Dashboard() {
         </section>
 
         <section className="mt-10">
-          <h2 className={h2Style}>Upcoming Tasks</h2>
+          <div className="flex justify-between items-center">
+            <h2 className={h2Style}>Upcoming Tasks</h2>
+            <Link to="/tasks" className={viewAllStyle}>
+              View all
+            </Link>
+          </div>
           <ul className="space-y-2 mt-5">
             {activeTasks.map((task) => (
               <li
@@ -100,9 +115,14 @@ export default function Dashboard() {
         </section>
 
         <section className="mt-10">
-          <h2 className={h2Style}>Recent Deliverables</h2>
+          <div className="flex justify-between items-center">
+            <h2 className={h2Style}>Recent Deliverables</h2>
+            <Link to="/deliverables" className={viewAllStyle}>
+              View all
+            </Link>
+          </div>
           <ul className="space-y-2 mt-5">
-            {deliverables.map((deliverable) => (
+            {recentDeliverables.map((deliverable) => (
               <li key={deliverable.id}>
                 <Link
                   to={`/deliverables/${deliverable.id}`}

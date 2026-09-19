@@ -1,13 +1,21 @@
 import { projects } from "../data/projects";
 import { clients } from "../data/clients";
 import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 export default function Projects() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full";
+  const primaryButt =
+    "flex items-center gap-2 self-start px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-gray-900 mb-5">Projects</h1>
+      <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl">
+        <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+        <button className={primaryButt}>
+          <Plus className="size-4" /> Add Project
+        </button>
+      </div>
       <ul className="flex flex-col gap-3 max-w-5xl">
         {projects.map((project) => {
           const client = clients.find(

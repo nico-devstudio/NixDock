@@ -3,7 +3,7 @@ export const deliverables = [
         id: 1,
         projectId: 1,
         name: "Homepage Design",
-        date: "2026-09-15",
+        date: "2026-09-12",
     },
     {
         id: 2,
@@ -21,7 +21,7 @@ export const deliverables = [
         id: 4,
         projectId: 2,
         name: "Logo Package",
-        date: "2026-09-12",
+        date: "2026-09-15",
     },
     {
         id: 5,

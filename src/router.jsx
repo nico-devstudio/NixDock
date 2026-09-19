@@ -9,6 +9,7 @@ import RootLayout from "./layouts/RootLayout";
 import Project from "./pages/Project";
 import Task from "./pages/Task";
 import Deliverable from "./pages/Deliverable";
+import Deliverables from "./pages/Deliverables";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "tasks/:id",
         element: <Task />,
+      },
+      {
+        path: "deliverables",
+        element: <Deliverables />,
       },
       {
         path: "deliverables/:id",
