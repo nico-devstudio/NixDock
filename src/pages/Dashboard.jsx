@@ -2,6 +2,7 @@ import { clients } from "../data/clients";
 import { projects } from "../data/projects";
 import { tasks } from "../data/tasks";
 import { deliverables } from "../data/deliverables";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const cardsStyle =
@@ -92,18 +93,20 @@ export default function Dashboard() {
           <h2 className={h2Style}>Recent Deliverables</h2>
           <ul className="space-y-2 mt-5">
             {deliverables.map((deliverable) => (
-              <li
-                key={deliverable.id}
-                className={`${container} p-3 max-md:flex-col`}
-              >
-                <p>{deliverable.name}</p>
-                <p className={`${mutedText} shrink-0`}>
-                  {new Date(deliverable.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
+              <li key={deliverable.id}>
+                <Link
+                  to={`/deliverables/${deliverable.id}`}
+                  className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                >
+                  <p>{deliverable.name}</p>
+                  <p className={`${mutedText} shrink-0`}>
+                    {new Date(deliverable.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                </Link>
               </li>
             ))}
           </ul>

@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { projects } from "../data/projects";
 import { clients } from "../data/clients";
 import { tasks } from "../data/tasks";
+import { deliverables } from "../data/deliverables";
 
 export default function Project() {
   const { id } = useParams();
@@ -15,6 +16,11 @@ export default function Project() {
   const projTasks = project
     ? tasks.filter((task) => task.projectId === project.id)
     : [];
+  const container =
+    "flex flex-wrap justify-between border border-gray-200 rounded-md";
+  const projDeliverables = deliverables.filter(
+    (deliverable) => deliverable.projectId === project.id,
+  );
 
   return (
     <>
@@ -106,6 +112,31 @@ export default function Project() {
                     </div>
                     <p className="self-center text-sm text-gray-500">
                       {new Date(task.deadline).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold text-gray-900 my-5">
+              Deliverables
+            </h2>
+            <ul className="space-y-2 mt-5">
+              {projDeliverables.map((deliverable) => (
+                <li key={deliverable.id}>
+                  <Link
+                    to={`/deliverables/${deliverable.id}`}
+                    className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                  >
+                    <p>{deliverable.name}</p>
+                    <p className="text-gray-400  shrink-0">
+                      {new Date(deliverable.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",

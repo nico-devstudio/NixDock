@@ -3,11 +3,12 @@ import Settings from "./pages/Settings";
 import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Tasks from "./pages/Tasks";
-import Client from "./components/Client";
+import Client from "./pages/Client";
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import Project from "./pages/Project";
 import Task from "./pages/Task";
+import Deliverable from "./pages/Deliverable";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "tasks/:id",
         element: <Task />,
+      },
+      {
+        path: "deliverables/:id",
+        element: <Deliverable />,
       },
     ],
   },

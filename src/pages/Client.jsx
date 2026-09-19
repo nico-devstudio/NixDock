@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { clients } from "../data/clients";
 import { projects } from "../data/projects";
+import { deliverables } from "../data/deliverables";
 
 export default function Client() {
   const { id } = useParams();
@@ -13,6 +14,11 @@ export default function Client() {
   const projectCardStyle =
     "border border-gray-200 rounded-xl p-4 text-sm text-gray-800 hover:border-gray-300 hover:shadow-sm transition";
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
+  const clientDeliverables = deliverables.filter((deliverable) =>
+    clientProjects.some((project) => project.id === deliverable.projectId),
+  );
+  const container =
+    "flex flex-wrap justify-between border border-gray-200 rounded-md";
 
   return (
     <div className="max-w-5xl">
@@ -60,6 +66,31 @@ export default function Client() {
                     <p className="text-xs text-gray-500">
                       Deadline:{" "}
                       {new Date(project.deadline).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold text-gray-900 my-5">
+              Deliverables
+            </h2>
+            <ul className="space-y-2 mt-5">
+              {clientDeliverables.map((deliverable) => (
+                <li key={deliverable.id}>
+                  <Link
+                    to={`/deliverables/${deliverable.id}`}
+                    className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                  >
+                    <p>{deliverable.name}</p>
+                    <p className="text-gray-400  shrink-0">
+                      {new Date(deliverable.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
