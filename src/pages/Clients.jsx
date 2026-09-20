@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, UsersRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { clients } from "../data/clients";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +10,7 @@ export default function Clients() {
   const mutedText = "text-gray-400 my-auto";
   const nameStyle = "text-gray-900 font-semibold text-base";
   const primaryButt =
-    "flex items-center gap-2 self-start px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const deleteButt =
     "px-4 py-2 cursor-pointer self-center text-md rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const clientForm = useRef();
@@ -26,17 +26,26 @@ export default function Clients() {
     clientForm.current.open();
   }
 
-  function handleDeleteClient() {}
+  function handleDeleteClient(id, name) {
+    const confirmed = confirm(`Are you sure you want to delete ${name}?`);
+
+    confirmed &&
+      setClientList((prevList) => prevList.filter((list) => list.id !== id));
+  }
 
   return (
     <div className="max-w-5xl">
-      <div className="flex max-md:flex-col justify-between mb-10">
+      <div className="flex max-md:flex-col justify-between mb-5">
         <h1 className="text-2xl font-semibold text-gray-900 mt-1 mb-2">
           Clients
         </h1>
-        <button className={primaryButt} onClick={handleAddClient}>
-          <Plus className="size-4" /> Add Client
-        </button>
+        {clientList.length > 0 ? (
+          <button className={primaryButt} onClick={handleAddClient}>
+            <Plus className="size-4" /> Add Client
+          </button>
+        ) : (
+          ""
+        )}
       </div>
 
       <ClientForm ref={clientForm} setList={setClientList} />
@@ -46,22 +55,43 @@ export default function Clients() {
       </p>
 
       <section className="flex gap-4 flex-col max-w-5xl">
-        {clientList.map((client) => (
-          <div key={client.id} className={cardsStyle}>
-            <Link
-              to={`/clients/${client.id}`}
-              className="flex flex-col flex-1  gap-2 "
-            >
-              <p className={nameStyle}>{client.name}</p>
-              <p className={`${mutedText} wrap-break-word`}>{client.email}</p>
+        {clientList.length > 0 ? (
+          clientList.map((client) => (
+            <div key={client.id} className={cardsStyle}>
+              <Link
+                to={`/clients/${client.id}`}
+                className="flex flex-col flex-1  gap-2 "
+              >
+                <p className={nameStyle}>{client.name}</p>
+                <p className={`${mutedText} wrap-break-word`}>{client.email}</p>
 
-              <p className={`${mutedText} shrink-0`}>
-                {client.projects} {client.projects > 1 ? "Projects" : "Project"}
-              </p>
-            </Link>
-            <button className={deleteButt}>Delete</button>
+                <p className={`${mutedText} shrink-0`}>
+                  {client.projects}{" "}
+                  {client.projects > 1 ? "Projects" : "Project"}
+                </p>
+              </Link>
+              <button
+                className={deleteButt}
+                onClick={() => handleDeleteClient(client.id, client.name)}
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
+            <UsersRound className="size-10 text-gray-400" />
+            <h2 className="text-lg font-semibold text-gray-900">
+              No clients yet
+            </h2>
+            <p className="text-sm text-gray-500 mb-5">
+              Add your first client to get started.
+            </p>
+            <button className={primaryButt} onClick={handleAddClient}>
+              <Plus className="size-4" /> Add Client
+            </button>
           </div>
-        ))}
+        )}
       </section>
     </div>
   );
