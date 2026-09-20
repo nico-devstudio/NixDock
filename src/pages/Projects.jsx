@@ -12,9 +12,13 @@ export default function Projects() {
     <>
       <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl">
         <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
-        <button className={primaryButt}>
-          <Plus className="size-4" /> Add Project
-        </button>
+        {projects.length > 0 ? (
+          <button className={primaryButt}>
+            <Plus className="size-4" /> Add Project
+          </button>
+        ) : (
+          ""
+        )}
       </div>
       <ul className="flex flex-col gap-3 max-w-5xl">
         {projects.length > 0 ? (
