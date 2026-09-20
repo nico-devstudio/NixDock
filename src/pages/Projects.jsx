@@ -7,6 +7,8 @@ export default function Projects() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full";
   const primaryButt =
     "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+  const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full mt-3";
+  const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
 
   return (
     <>
@@ -41,6 +43,15 @@ export default function Projects() {
                   <p className="text-sm text-gray-500">
                     {client ? client.name : "No client found"}
                   </p>
+                  <div className="flex gap-2">
+                    <div className={`${actProjOuterProgStyle} flex-1`}>
+                      <div
+                        className={actProjInnerProgStyle}
+                        style={{ width: `${project.progress}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-sm text-gray-500">{project.progress}%</p>
+                  </div>
 
                   <div className="flex justify-between items-center">
                     <p

@@ -166,7 +166,7 @@ export default function Dashboard() {
                 <li key={deliverable.id}>
                   <Link
                     to={`/deliverables/${deliverable.id}`}
-                    className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                    className={`${container} p-3 hover:border-gray-300 hover:shadow-sm transition`}
                   >
                     <p>{deliverable.name}</p>
                     <p className={`${mutedText} shrink-0`}>
@@ -189,7 +189,7 @@ export default function Dashboard() {
               </h3>
 
               <p className="text-sm text-gray-500">
-                Deliverables will appear here when added.
+                Recent deliverables will appear here.
               </p>
             </div>
           )}
