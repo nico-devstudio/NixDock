@@ -76,7 +76,7 @@ const ProjectForm = forwardRef(function ProjectForm(
             name="clientId"
             id="client"
             required
-            defaultValue={String(selectedProject?.clientId ?? "")}
+            defaultValue={selectedProject?.clientId}
           >
             <option value="">Select a client</option>
             {clientList.map((client) => (
@@ -106,7 +106,9 @@ const ProjectForm = forwardRef(function ProjectForm(
           <button type="button" onClick={() => dialog.current.close()}>
             Cancel
           </button>
-          <button type="submit">Add Project</button>
+          <button type="submit">
+            {selectedProject ? "Edit Project" : "Add Project"}
+          </button>
         </form>
       </dialog>
     </>
