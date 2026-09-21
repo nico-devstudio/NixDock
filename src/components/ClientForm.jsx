@@ -25,9 +25,9 @@ const ClientForm = forwardRef(function ClientForm({ setList }, ref) {
       <dialog ref={dialog}>
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" />
+          <input required type="text" id="name" name="name" />
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" />
+          <input required type="email" id="email" name="email" />
           <button type="button" onClick={() => dialog.current.close()}>
             Cancel
           </button>

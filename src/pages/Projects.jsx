@@ -1,7 +1,7 @@
-import { projects } from "../data/projects";
-import { clients } from "../data/clients";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, Plus } from "lucide-react";
+import ProjectForm from "../components/ProjectForm";
+import { useRef } from "react";
 
 export default function Projects() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full";
@@ -9,13 +9,40 @@ export default function Projects() {
     "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full mt-3";
   const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
+  const deleteButt =
+    "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
+  const editButt =
+    "px-4 py-2 cursor-pointer text-base rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
+  const { clientList, projectList, setProjectList } = useOutletContext();
+  const projectForm = useRef();
+
+  function handleAddProject() {
+    projectForm.current.open();
+  }
+
+  function handleDeleteProject(id, name) {
+    const confirmed = confirm(`Are you sure you want to delete ${name}?`);
+
+    confirmed &&
+      setProjectList((prevList) => prevList.filter((list) => list.id !== id));
+  }
 
   return (
     <>
+      <ProjectForm
+        clientList={clientList}
+        ref={projectForm}
+        setProjectList={setProjectList}
+        projectList={projectList}
+      />
+
       <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl">
         <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
-        {projects.length > 0 ? (
-          <button className={primaryButt}>
+        {projectList.length > 0 ? (
+          <button
+            className={`${primaryButt} self-start`}
+            onClick={handleAddProject}
+          >
             <Plus className="size-4" /> Add Project
           </button>
         ) : (
@@ -23,15 +50,15 @@ export default function Projects() {
         )}
       </div>
       <ul className="flex flex-col gap-3 max-w-5xl">
-        {projects.length > 0 ? (
-          projects.map((project) => {
-            const client = clients.find(
+        {projectList.length > 0 ? (
+          projectList.map((project) => {
+            const client = clientList.find(
               (client) => client.id === project.clientId,
             );
             return (
               <li
                 key={project.id}
-                className="border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
+                className="border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition relative"
               >
                 <Link
                   to={`/projects/${project.id}`}
@@ -74,6 +101,22 @@ export default function Projects() {
                     </p>
                   </div>
                 </Link>
+                <div className="absolute top-2 right-2 z-10">
+                  <button
+                    className={editButt}
+                    onClick={() => projectForm.current.open(project.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className={deleteButt}
+                    onClick={() =>
+                      handleDeleteProject(project.id, project.name)
+                    }
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             );
           })
@@ -86,7 +129,7 @@ export default function Projects() {
             <p className="text-sm text-gray-500 mb-5">
               Create your first project to get started.
             </p>
-            <button className={primaryButt}>
+            <button className={primaryButt} onClick={handleAddProject}>
               <Plus className="size-4" /> Add Project
             </button>
           </div>

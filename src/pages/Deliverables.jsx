@@ -13,9 +13,9 @@ export default function Deliverables() {
   return (
     <>
       <h1 className="text-2xl font-semibold text-gray-900">Deliverables</h1>
-      <ul className="space-y-2 mt-5 max-w-5xl">
-        {deliverables.length > 0 ? (
-          deliverables.map((deliverable) => {
+      {deliverables.length > 0 ? (
+        <ul className="space-y-2 mt-5 max-w-5xl">
+          {deliverables.map((deliverable) => {
             const project = projects.find(
               (project) => project.id === deliverable.projectId,
             );
@@ -43,22 +43,22 @@ export default function Deliverables() {
                 </Link>
               </li>
             );
-          })
-        ) : (
-          <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
-            <PackageCheck className="size-10 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900">
-              No deliverables yet
-            </h2>
-            <p className="text-sm text-gray-500 mb-5">
-              Add your first deliverable to get started.
-            </p>
-            <button className={primaryButt}>
-              <Plus className="size-4" /> Add Deliverable
-            </button>
-          </div>
-        )}
-      </ul>
+          })}
+        </ul>
+      ) : (
+        <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
+          <PackageCheck className="size-10 text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900">
+            No deliverables yet
+          </h2>
+          <p className="text-sm text-gray-500 mb-5">
+            Add your first deliverable to get started.
+          </p>
+          <button className={primaryButt}>
+            <Plus className="size-4" /> Add Deliverable
+          </button>
+        </div>
+      )}
     </>
   );
 }

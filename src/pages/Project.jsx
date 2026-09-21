@@ -1,26 +1,30 @@
-import { Link, useParams } from "react-router-dom";
-import { projects } from "../data/projects";
-import { clients } from "../data/clients";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import { tasks } from "../data/tasks";
 import { deliverables } from "../data/deliverables";
+import { ListChecks, PackageCheck, Plus } from "lucide-react";
 
 export default function Project() {
   const { id } = useParams();
-  const project = projects.find((project) => project.id === parseInt(id, 10));
-  const client = clients.find(
+  const { clientList, projectList } = useOutletContext();
+  const project = projectList.find(
+    (project) => project.id === parseInt(id, 10),
+  );
+  const client = clientList.find(
     (client) => project && client.id === project.clientId,
   );
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
   const projDetails = "flex justify-between";
   const projDetailLabel = "text-gray-500";
+  const primaryButt =
+    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const projTasks = project
     ? tasks.filter((task) => task.projectId === project.id)
     : [];
   const container =
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
-  const projDeliverables = deliverables.filter(
-    (deliverable) => deliverable.projectId === project.id,
-  );
+  const projDeliverables = project
+    ? deliverables.filter((deliverable) => deliverable.projectId === project.id)
+    : [];
 
   return (
     <>
@@ -69,7 +73,16 @@ export default function Project() {
               <div className={projDetails}>
                 <p className={projDetailLabel}>Client</p>
                 <p className="text-gray-900">
-                  {client ? client.name : "No client found"}
+                  {client ? (
+                    <Link
+                      to={`/clients/${project.clientId}`}
+                      className="hover:text-gray-600"
+                    >
+                      {client.name}
+                    </Link>
+                  ) : (
+                    "No client found"
+                  )}
                 </p>
               </div>
               <div className={projDetails}>
@@ -87,65 +100,95 @@ export default function Project() {
 
           <section>
             <h2 className="text-lg font-semibold text-gray-900 my-5">Tasks</h2>
-            <ul className="flex flex-col gap-2">
-              {projTasks.map((task) => (
-                <li key={task.id}>
-                  <Link
-                    to={`/tasks/${task.id}`}
-                    className="justify-between flex border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <p className="text-gray-800 font-medium text-base">
-                        {task.name}
+            {projTasks.length > 0 ? (
+              <ul className="flex flex-col gap-2">
+                {projTasks.map((task) => (
+                  <li key={task.id}>
+                    <Link
+                      to={`/tasks/${task.id}`}
+                      className="justify-between flex border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
+                    >
+                      <div className="flex flex-col gap-2">
+                        <p className="text-gray-800 font-medium text-base">
+                          {task.name}
+                        </p>
+                        <p
+                          className={
+                            task.status === "Completed"
+                              ? `bg-green-100 text-green-700 ${projStatus}`
+                              : task.status === "In Progress"
+                                ? `bg-blue-100 text-blue-700 ${projStatus}`
+                                : `bg-gray-100 text-gray-600 ${projStatus}`
+                          }
+                        >
+                          {task.status}
+                        </p>
+                      </div>
+                      <p className="self-center text-sm text-gray-500">
+                        {new Date(task.deadline).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </p>
-                      <p
-                        className={
-                          task.status === "Completed"
-                            ? `bg-green-100 text-green-700 ${projStatus}`
-                            : task.status === "In Progress"
-                              ? `bg-blue-100 text-blue-700 ${projStatus}`
-                              : `bg-gray-100 text-gray-600 ${projStatus}`
-                        }
-                      >
-                        {task.status}
-                      </p>
-                    </div>
-                    <p className="self-center text-sm text-gray-500">
-                      {new Date(task.deadline).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
+                <ListChecks className="size-10 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  No tasks yet
+                </h2>
+                <p className="text-sm text-gray-500 mb-5">
+                  Create your first task to get started.
+                </p>
+                <button className={primaryButt}>
+                  <Plus className="size-4" /> Add Task
+                </button>
+              </div>
+            )}
           </section>
 
           <section className="mt-10">
             <h2 className="text-lg font-semibold text-gray-900 my-5">
               Deliverables
             </h2>
-            <ul className="space-y-2 mt-5">
-              {projDeliverables.map((deliverable) => (
-                <li key={deliverable.id}>
-                  <Link
-                    to={`/deliverables/${deliverable.id}`}
-                    className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
-                  >
-                    <p>{deliverable.name}</p>
-                    <p className="text-gray-400  shrink-0">
-                      {new Date(deliverable.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {projDeliverables.length > 0 ? (
+              <ul className="space-y-2 mt-5">
+                {projDeliverables.map((deliverable) => (
+                  <li key={deliverable.id}>
+                    <Link
+                      to={`/deliverables/${deliverable.id}`}
+                      className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                    >
+                      <p>{deliverable.name}</p>
+                      <p className="text-gray-400  shrink-0">
+                        {new Date(deliverable.date).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
+                <PackageCheck className="size-10 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  No deliverables yet
+                </h2>
+                <p className="text-sm text-gray-500 mb-5">
+                  Deliverables for this client will appear here.
+                </p>
+              </div>
+            )}
           </section>
         </div>
       ) : (

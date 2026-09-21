@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { deliverables } from "../data/deliverables";
 import { projects } from "../data/projects";
+import { clients } from "../data/clients";
 
 export default function Deliverable() {
   const { id } = useParams();
@@ -10,6 +11,9 @@ export default function Deliverable() {
   const project =
     deliverable &&
     projects.find((project) => project.id === deliverable.projectId);
+
+  const client =
+    project && clients.find((client) => client.id === project.clientId);
 
   return (
     <>
@@ -38,7 +42,31 @@ export default function Deliverable() {
             <div>
               <p className="text-sm text-gray-500">Project</p>
               <p className="text-gray-900 font-medium mt-1">
-                {project ? project.name : "Project not found"}
+                {project ? (
+                  <Link
+                    className="hover:text-gray-600"
+                    to={`/projects/${project.id}`}
+                  >
+                    {project.name}
+                  </Link>
+                ) : (
+                  "Project not found"
+                )}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Client</p>
+              <p className="text-gray-900 font-medium mt-1">
+                {client ? (
+                  <Link
+                    to={`/clients/${client.id}`}
+                    className="hover:text-gray-600"
+                  >
+                    {client.name}
+                  </Link>
+                ) : (
+                  "Client not found"
+                )}
               </p>
             </div>
           </div>

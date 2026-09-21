@@ -1,7 +1,6 @@
 import { Plus, UsersRound } from "lucide-react";
-import { Link } from "react-router-dom";
-import { clients } from "../data/clients";
-import { useEffect, useRef, useState } from "react";
+import { Link, useOutletContext } from "react-router-dom";
+import { useRef } from "react";
 import ClientForm from "../components/ClientForm";
 
 export default function Clients() {
@@ -14,13 +13,7 @@ export default function Clients() {
   const deleteButt =
     "px-4 py-2 cursor-pointer self-center text-md rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const clientForm = useRef();
-
-  const savedClients = JSON.parse(localStorage.getItem("clients"));
-  const [clientList, setClientList] = useState(savedClients || clients);
-
-  useEffect(() => {
-    localStorage.setItem("clients", JSON.stringify(clientList));
-  }, [clientList]);
+  const { clientList, setClientList } = useOutletContext();
 
   function handleAddClient() {
     clientForm.current.open();

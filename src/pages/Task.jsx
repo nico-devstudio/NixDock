@@ -16,11 +16,17 @@ export default function Task() {
     <>
       <div className="flex flex-col gap-2 mb-10">
         <h1 className="text-2xl font-semibold text-gray-900">{task.name}</h1>
-        <Link to={`/projects/${task.projectId}`}>
+        {project ? (
+          <Link to={`/projects/${task.projectId}`}>
+            <p className="text-sm text-gray-700 hover:text-gray-900">
+              Project: {project.name}
+            </p>
+          </Link>
+        ) : (
           <p className="text-sm text-gray-700 hover:text-gray-900">
-            Project: {project.name}
+            No project found.
           </p>
-        </Link>
+        )}
         <p
           className={
             task.status === "Completed"
@@ -43,15 +49,26 @@ export default function Task() {
           </div>
           <div className="flex justify-between">
             <p className="text-gray-500">Project</p>
-            <Link to={`/projects/${task.projectId}`}>
-              <p className="hover:text-gray-600">{project.name}</p>
-            </Link>
+            {project ? (
+              <Link to={`/projects/${task.projectId}`}>
+                <p className="hover:text-gray-600">{project.name}</p>
+              </Link>
+            ) : (
+              <p className="hover:text-gray-600">No project found.</p>
+            )}
           </div>
           <div className="flex justify-between">
             <p className="text-gray-500">Client</p>
-            <Link to={`/clients/${client.id}`} className="hover:text-gray-600">
-              <p>{client.name}</p>
-            </Link>
+            {client ? (
+              <Link
+                to={`/clients/${client.id}`}
+                className="hover:text-gray-600"
+              >
+                <p>{client.name}</p>
+              </Link>
+            ) : (
+              <p className="hover:text-gray-600">No client found.</p>
+            )}
           </div>
           <div className="flex justify-between">
             <p className="text-gray-500">Deadline</p>
