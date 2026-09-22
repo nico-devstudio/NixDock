@@ -13,7 +13,7 @@ export default function Clients() {
   const deleteButt =
     "px-4 py-2 cursor-pointer self-center text-md rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
-    "px-4 py-2 cursor-pointer text-base rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
+    "px-4 py-2 cursor-pointer text-base self-center rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
   const clientForm = useRef();
   const { clientList, setClientList } = useOutletContext();
 

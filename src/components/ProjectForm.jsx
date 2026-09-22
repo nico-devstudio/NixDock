@@ -52,14 +52,6 @@ const ProjectForm = forwardRef(function ProjectForm(
     event.target.reset();
   }
 
-  console.log("selected:", selectedProject?.clientId);
-  console.log(
-    "clients:",
-    clientList.map((client) => client.id),
-  );
-  console.log(clientList);
-  console.log(selectedProject);
-
   return (
     <>
       <dialog ref={dialog}>
@@ -76,7 +68,13 @@ const ProjectForm = forwardRef(function ProjectForm(
             name="clientId"
             id="client"
             required
-            defaultValue={selectedProject?.clientId}
+            value={selectedProject?.clientId ?? ""}
+            onChange={(event) => {
+              setSelectedProject((prev) => ({
+                ...prev,
+                clientId: Number(event.target.value),
+              }));
+            }}
           >
             <option value="">Select a client</option>
             {clientList.map((client) => (
@@ -88,7 +86,13 @@ const ProjectForm = forwardRef(function ProjectForm(
           <select
             name="status"
             id="status"
-            defaultValue={selectedProject?.status}
+            value={selectedProject?.status ?? ""}
+            onChange={(event) => {
+              setSelectedProject((prev) => ({
+                ...prev,
+                status: event.target.value,
+              }));
+            }}
           >
             <option value="">Select a status</option>
             <option value="Completed">Completed</option>
