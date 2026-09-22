@@ -1,15 +1,13 @@
-import { Link, useParams } from "react-router-dom";
-import { tasks } from "../data/tasks";
-import { projects } from "../data/projects";
-import { clients } from "../data/clients";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 
 export default function Task() {
   const { id } = useParams();
-  const task = tasks.find((task) => task.id === parseInt(id, 10));
+  const { taskList, projectList, clientList } = useOutletContext();
+  const task = taskList.find((task) => task.id === parseInt(id, 10));
   const project =
-    task && projects.find((project) => project.id === task.projectId);
+    task && projectList.find((project) => project.id === task.projectId);
   const client =
-    project && clients.find((client) => project.clientId === client.id);
+    project && clientList.find((client) => project.clientId === client.id);
   const statusStyle = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
 
   return task ? (

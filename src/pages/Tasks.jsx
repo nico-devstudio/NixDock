@@ -15,7 +15,7 @@ export default function Tasks() {
   const taskForm = useRef();
 
   function handleAddTask() {
-    taskForm.current.open();
+    taskForm.current.open({});
   }
 
   function handleDeleteTask(id, name) {
@@ -94,7 +94,7 @@ export default function Tasks() {
                 <div className="absolute top-3 right-2 z-10">
                   <button
                     className={editButt}
-                    onClick={() => taskForm.current.open(task.id)}
+                    onClick={() => taskForm.current.open({ taskId: task.id })}
                   >
                     Edit
                   </button>

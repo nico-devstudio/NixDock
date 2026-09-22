@@ -1,11 +1,12 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { tasks } from "../data/tasks";
 import { deliverables } from "../data/deliverables";
 import { ListChecks, PackageCheck, Plus } from "lucide-react";
+import { useRef } from "react";
+import TaskForm from "../components/TaskForm";
 
 export default function Project() {
   const { id } = useParams();
-  const { clientList, projectList } = useOutletContext();
+  const { clientList, projectList, taskList, setTaskList } = useOutletContext();
   const project = projectList.find(
     (project) => project.id === parseInt(id, 10),
   );
@@ -15,19 +16,32 @@ export default function Project() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
   const projDetails = "flex justify-between";
   const projDetailLabel = "text-gray-500";
+  const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full mt-3";
+  const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
   const primaryButt =
-    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center self-center gap-2 px-2 py-1 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const projTasks = project
-    ? tasks.filter((task) => task.projectId === project.id)
+    ? taskList.filter((task) => task.projectId === project.id)
     : [];
   const container =
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
   const projDeliverables = project
     ? deliverables.filter((deliverable) => deliverable.projectId === project.id)
     : [];
+  const taskForm = useRef();
+
+  function handleAddTask(id) {
+    taskForm.current.open({ projectId: id });
+  }
 
   return (
     <>
+      <TaskForm
+        ref={taskForm}
+        projectList={projectList}
+        setTaskList={setTaskList}
+        taskList={taskList}
+      />
       {project ? (
         <div className="flex flex-col gap-2 max-w-5xl">
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -39,6 +53,14 @@ export default function Project() {
           >
             Client: {client ? client.name : "No client found"}
           </Link>
+          <p className="text-xs text-gray-500">
+            Deadline:{" "}
+            {new Date(project.deadline).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </p>
           <div className="flex gap-8">
             <p
               className={
@@ -50,14 +72,6 @@ export default function Project() {
               }
             >
               {project.status}
-            </p>
-            <p className="text-xs text-gray-500">
-              Deadline:{" "}
-              {new Date(project.deadline).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
             </p>
           </div>
 
@@ -95,11 +109,35 @@ export default function Project() {
                   })}
                 </p>
               </div>
+              <div className="flex gap-2 relative">
+                <p className="text-xs text-gray-500 absolute bottom-3">
+                  Progress
+                </p>
+                <div className={`${actProjOuterProgStyle} flex-1`}>
+                  <div
+                    className={actProjInnerProgStyle}
+                    style={{ width: `${project.progress}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm text-gray-500">{project.progress}%</p>
+              </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 my-5">Tasks</h2>
+            <div className="flex justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 my-5">
+                Tasks
+              </h2>
+              {projTasks.length > 0 ? (
+                <button
+                  className={primaryButt}
+                  onClick={() => handleAddTask(project.id)}
+                >
+                  <Plus className="size-4" /> Add Task
+                </button>
+              ) : null}
+            </div>
             {projTasks.length > 0 ? (
               <ul className="flex flex-col gap-2">
                 {projTasks.map((task) => (
@@ -144,7 +182,10 @@ export default function Project() {
                 <p className="text-sm text-gray-500 mb-5">
                   Create your first task to get started.
                 </p>
-                <button className={primaryButt}>
+                <button
+                  className={primaryButt}
+                  onClick={() => handleAddTask(project.id)}
+                >
                   <Plus className="size-4" /> Add Task
                 </button>
               </div>

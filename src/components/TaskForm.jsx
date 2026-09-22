@@ -14,8 +14,8 @@ const TaskForm = forwardRef(function TaskForm(
   });
 
   useImperativeHandle(ref, () => ({
-    open(id) {
-      const task = taskList.find((task) => task.id === id);
+    open({ taskId, projectId }) {
+      const task = taskList.find((task) => task.id === taskId);
 
       setSelectedTask(task);
 
@@ -31,13 +31,19 @@ const TaskForm = forwardRef(function TaskForm(
 
         setFormData({
           name: "",
-          projectId: "",
+          projectId: projectId || "",
           status: "",
           deadline: "",
         });
       }
 
       dialog.current.showModal();
+      console.log("formData before opening:", {
+        name: task?.name,
+        projectId: task?.projectId,
+        status: task?.status,
+        deadline: task?.deadline,
+      });
     },
   }));
 
