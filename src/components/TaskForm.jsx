@@ -6,11 +6,37 @@ const TaskForm = forwardRef(function TaskForm(
 ) {
   const dialog = useRef();
   const [selectedTask, setSelectedTask] = useState();
+  const [formData, setFormData] = useState({
+    name: "",
+    projectId: "",
+    status: "",
+    deadline: "",
+  });
 
   useImperativeHandle(ref, () => ({
     open(id) {
-      const task = taskList.find((Task) => Task.id === id);
+      const task = taskList.find((task) => task.id === id);
+
       setSelectedTask(task);
+
+      if (task) {
+        setFormData({
+          name: task.name,
+          projectId: task.projectId,
+          status: task.status,
+          deadline: task.deadline,
+        });
+      } else {
+        setSelectedTask(undefined);
+
+        setFormData({
+          name: "",
+          projectId: "",
+          status: "",
+          deadline: "",
+        });
+      }
+
       dialog.current.showModal();
     },
   }));
@@ -18,55 +44,59 @@ const TaskForm = forwardRef(function TaskForm(
   function handleSubmit(event) {
     event.preventDefault();
 
-    const fd = new FormData(event.target);
-    const data = Object.fromEntries(fd.entries());
-
     selectedTask
-      ? setTaskList((prevList) => {
-          return prevList.map((list) => {
-            if (list.id === selectedTask.id) {
-              const updatedTask = {
-                ...data,
-                id: selectedTask.id,
-                projectId: parseInt(data.projectId, 10),
-              };
-              return updatedTask;
-            }
-
-            return list;
-          });
-        })
-      : setTaskList((prevList) => {
-          const newData = {
-            ...data,
+      ? setTaskList((prevList) =>
+          prevList.map((task) =>
+            task.id === selectedTask.id
+              ? {
+                  ...formData,
+                  id: selectedTask.id,
+                  projectId: Number(formData.projectId),
+                }
+              : task,
+          ),
+        )
+      : setTaskList((prevList) => [
+          ...prevList,
+          {
+            ...formData,
             id: Date.now(),
-            projectId: parseInt(data.projectId, 10),
-          };
-          const newTask = [...prevList, newData];
-          return newTask;
-        });
+            projectId: Number(formData.projectId),
+          },
+        ]);
 
     dialog.current.close();
-    event.target.reset();
   }
 
   return (
     <>
       <dialog ref={dialog}>
-        <form onSubmit={handleSubmit} key={selectedTask?.id}>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="task-name">Task name</label>
           <input
             required
             type="text"
             id="task-name"
             name="name"
-            defaultValue={selectedTask?.name}
+            value={formData.name}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                name: event.target.value,
+              }))
+            }
           />
           <select
             name="projectId"
             id="project"
             required
-            defaultValue={selectedTask?.projectId}
+            value={formData.projectId}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                projectId: Number(event.target.value),
+              }))
+            }
           >
             <option value="">Select a project</option>
             {projectList.map((project) => (
@@ -79,7 +109,13 @@ const TaskForm = forwardRef(function TaskForm(
             name="status"
             id="status"
             required
-            defaultValue={selectedTask?.status}
+            value={formData.status}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                status: event.target.value,
+              }))
+            }
           >
             <option value="">Select a status</option>
             <option value="Completed">Completed</option>
@@ -92,7 +128,13 @@ const TaskForm = forwardRef(function TaskForm(
             type="date"
             id="deadline"
             name="deadline"
-            defaultValue={selectedTask?.deadline}
+            value={formData.deadline}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                deadline: event.target.value,
+              }))
+            }
           />
           <button type="button" onClick={() => dialog.current.close()}>
             Cancel

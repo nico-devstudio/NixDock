@@ -6,11 +6,39 @@ const ProjectForm = forwardRef(function ProjectForm(
 ) {
   const dialog = useRef();
   const [selectedProject, setSelectedProject] = useState();
+  const [formData, setFormData] = useState({
+    name: "",
+    clientId: "",
+    status: "",
+    deadline: "",
+    progress: 0,
+  });
 
   useImperativeHandle(ref, () => ({
     open(id) {
       const project = projectList.find((project) => project.id === id);
       setSelectedProject(project);
+
+      if (project) {
+        setFormData({
+          name: project.name,
+          clientId: project.clientId,
+          status: project.status,
+          deadline: project.deadline,
+          progress: Number(project.progress),
+        });
+      } else {
+        setSelectedProject(undefined);
+
+        setFormData({
+          name: "",
+          clientId: "",
+          status: "",
+          deadline: "",
+          progress: 0,
+        });
+      }
+
       dialog.current.showModal();
     },
   }));
@@ -18,36 +46,26 @@ const ProjectForm = forwardRef(function ProjectForm(
   function handleSubmit(event) {
     event.preventDefault();
 
-    const fd = new FormData(event.target);
-    const data = Object.fromEntries(fd.entries());
-
     selectedProject
-      ? setProjectList((prevList) => {
-          return prevList.map((list) => {
-            if (list.id === selectedProject.id) {
-              const updatedProject = {
-                ...data,
-                id: selectedProject.id,
-                progress: selectedProject.progress,
-                clientId: parseInt(data.clientId, 10),
-              };
-              return updatedProject;
-            }
-
-            return list;
-          });
-        })
-      : setProjectList((prevList) => {
-          const newData = {
-            ...data,
+      ? setProjectList((prevList) =>
+          prevList.map((project) =>
+            project.id === selectedProject.id
+              ? {
+                  ...formData,
+                  id: selectedProject.id,
+                  clientId: Number(formData.clientId),
+                }
+              : project,
+          ),
+        )
+      : setProjectList((prevList) => [
+          ...prevList,
+          {
+            ...formData,
             id: Date.now(),
-            progress: 0,
-            clientId: parseInt(data.clientId, 10),
-          };
-          const newProject = [...prevList, newData];
-          return newProject;
-        });
-
+            clientId: Number(formData.clientId),
+          },
+        ]);
     dialog.current.close();
     event.target.reset();
   }
@@ -55,22 +73,28 @@ const ProjectForm = forwardRef(function ProjectForm(
   return (
     <>
       <dialog ref={dialog}>
-        <form onSubmit={handleSubmit} key={selectedProject?.id}>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="project-name">Project name</label>
           <input
             required
             type="text"
             id="project-name"
             name="name"
-            defaultValue={selectedProject?.name}
+            value={formData.name}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                name: event.target.value,
+              }))
+            }
           />
           <select
             name="clientId"
             id="client"
             required
-            value={selectedProject?.clientId ?? ""}
+            value={formData.clientId}
             onChange={(event) => {
-              setSelectedProject((prev) => ({
+              setFormData((prev) => ({
                 ...prev,
                 clientId: Number(event.target.value),
               }));
@@ -86,9 +110,9 @@ const ProjectForm = forwardRef(function ProjectForm(
           <select
             name="status"
             id="status"
-            value={selectedProject?.status ?? ""}
+            value={formData.status}
             onChange={(event) => {
-              setSelectedProject((prev) => ({
+              setFormData((prev) => ({
                 ...prev,
                 status: event.target.value,
               }));
@@ -105,7 +129,13 @@ const ProjectForm = forwardRef(function ProjectForm(
             type="date"
             id="deadline"
             name="deadline"
-            defaultValue={selectedProject?.deadline}
+            value={formData.deadline}
+            onChange={(event) =>
+              setFormData((prev) => ({
+                ...prev,
+                deadline: event.target.value,
+              }))
+            }
           />
           <button type="button" onClick={() => dialog.current.close()}>
             Cancel
