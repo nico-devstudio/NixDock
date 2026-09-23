@@ -1,12 +1,19 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { deliverables } from "../data/deliverables";
 import { ListChecks, PackageCheck, Plus } from "lucide-react";
 import { useRef } from "react";
 import TaskForm from "../components/TaskForm";
+import DeliverableForm from "../components/DeliverableForm";
 
 export default function Project() {
   const { id } = useParams();
-  const { clientList, projectList, taskList, setTaskList } = useOutletContext();
+  const {
+    clientList,
+    projectList,
+    taskList,
+    setTaskList,
+    deliverableList,
+    setDeliverableList,
+  } = useOutletContext();
   const project = projectList.find(
     (project) => project.id === parseInt(id, 10),
   );
@@ -26,12 +33,19 @@ export default function Project() {
   const container =
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
   const projDeliverables = project
-    ? deliverables.filter((deliverable) => deliverable.projectId === project.id)
+    ? deliverableList.filter(
+        (deliverable) => deliverable.projectId === project.id,
+      )
     : [];
   const taskForm = useRef();
+  const deliverableForm = useRef();
 
   function handleAddTask(id) {
     taskForm.current.open({ projectId: id });
+  }
+
+  function handleAddDeliverable() {
+    deliverableForm.current.open({ projectId: id });
   }
 
   return (
@@ -41,6 +55,13 @@ export default function Project() {
         projectList={projectList}
         setTaskList={setTaskList}
         taskList={taskList}
+      />
+
+      <DeliverableForm
+        ref={deliverableForm}
+        deliverableList={deliverableList}
+        projectList={projectList}
+        setDeliverableList={setDeliverableList}
       />
       {project ? (
         <div className="flex flex-col gap-2 max-w-5xl">
@@ -193,9 +214,18 @@ export default function Project() {
           </section>
 
           <section className="mt-10">
-            <h2 className="text-lg font-semibold text-gray-900 my-5">
-              Deliverables
-            </h2>
+            <div className="flex justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 my-5">
+                Deliverables
+              </h2>
+              <button
+                className={primaryButt}
+                onClick={() => handleAddDeliverable(project.id)}
+              >
+                <Plus className="size-4" /> Add Deliverable
+              </button>
+            </div>
+
             {projDeliverables.length > 0 ? (
               <ul className="space-y-2 mt-5">
                 {projDeliverables.map((deliverable) => (
@@ -226,7 +256,7 @@ export default function Project() {
                   No deliverables yet
                 </h2>
                 <p className="text-sm text-gray-500 mb-5">
-                  Deliverables for this client will appear here.
+                  Deliverables for this project will appear here.
                 </p>
               </div>
             )}

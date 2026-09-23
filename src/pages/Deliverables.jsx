@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { deliverables } from "../data/deliverables";
-import { projects } from "../data/projects";
+import { Link, useOutletContext } from "react-router-dom";
 import { PackageCheck, Plus } from "lucide-react";
+import { useRef } from "react";
+import DeliverableForm from "../components/DeliverableForm";
 
 export default function Deliverables() {
   const container =
@@ -9,14 +9,34 @@ export default function Deliverables() {
   const mutedText = "text-gray-400";
   const primaryButt =
     "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+  const { deliverableList, projectList, setDeliverableList } =
+    useOutletContext();
+  const deliverableForm = useRef();
+
+  function handleAddDeliverable() {
+    deliverableForm.current.open({});
+  }
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-gray-900">Deliverables</h1>
-      {deliverables.length > 0 ? (
+      <div className="flex justify-between max-w-5xl">
+        <h1 className="text-2xl font-semibold text-gray-900">Deliverables</h1>
+        <button className={primaryButt} onClick={handleAddDeliverable}>
+          <Plus className="size-4" /> Add Deliverable
+        </button>
+      </div>
+
+      <DeliverableForm
+        ref={deliverableForm}
+        deliverableList={deliverableList}
+        projectList={projectList}
+        setDeliverableList={setDeliverableList}
+      />
+
+      {deliverableList.length > 0 ? (
         <ul className="space-y-2 mt-5 max-w-5xl">
-          {deliverables.map((deliverable) => {
-            const project = projects.find(
+          {deliverableList.map((deliverable) => {
+            const project = projectList.find(
               (project) => project.id === deliverable.projectId,
             );
             return (
@@ -54,7 +74,7 @@ export default function Deliverables() {
           <p className="text-sm text-gray-500 mb-5">
             Add your first deliverable to get started.
           </p>
-          <button className={primaryButt}>
+          <button className={primaryButt} onClick={handleAddDeliverable}>
             <Plus className="size-4" /> Add Deliverable
           </button>
         </div>

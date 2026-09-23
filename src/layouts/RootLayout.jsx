@@ -1,4 +1,3 @@
-// import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
@@ -6,20 +5,27 @@ import { clients } from "../data/clients";
 import { useEffect, useState } from "react";
 import { projects } from "../data/projects";
 import { tasks } from "../data/tasks";
+import { deliverables } from "../data/deliverables";
 
 export default function RootLayout() {
   const savedClients = JSON.parse(localStorage.getItem("clients"));
   const savedProjects = JSON.parse(localStorage.getItem("projects"));
   const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+  const savedDeliverables = JSON.parse(localStorage.getItem("deliverables"));
+
   const [clientList, setClientList] = useState(savedClients || clients);
   const [projectList, setProjectList] = useState(savedProjects || projects);
   const [taskList, setTaskList] = useState(savedTasks || tasks);
+  const [deliverableList, setDeliverableList] = useState(
+    savedDeliverables || deliverables,
+  );
 
   useEffect(() => {
     localStorage.setItem("clients", JSON.stringify(clientList));
     localStorage.setItem("projects", JSON.stringify(projectList));
     localStorage.setItem("tasks", JSON.stringify(taskList));
-  }, [clientList, projectList, taskList]);
+    localStorage.setItem("deliverables", JSON.stringify(deliverableList));
+  }, [clientList, projectList, taskList, deliverableList]);
 
   return (
     <>
@@ -34,6 +40,8 @@ export default function RootLayout() {
             setProjectList,
             taskList,
             setTaskList,
+            deliverableList,
+            setDeliverableList,
           }}
         />
       </main>
