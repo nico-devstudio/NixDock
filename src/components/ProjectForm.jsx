@@ -15,8 +15,8 @@ const ProjectForm = forwardRef(function ProjectForm(
   });
 
   useImperativeHandle(ref, () => ({
-    open(id) {
-      const project = projectList.find((project) => project.id === id);
+    open({ projectId, clientId }) {
+      const project = projectList.find((project) => project.id === projectId);
       setSelectedProject(project);
 
       if (project) {
@@ -32,7 +32,7 @@ const ProjectForm = forwardRef(function ProjectForm(
 
         setFormData({
           name: "",
-          clientId: "",
+          clientId: clientId || "",
           status: "",
           deadline: "",
           progress: 0,

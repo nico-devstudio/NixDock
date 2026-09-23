@@ -17,7 +17,7 @@ export default function Projects() {
   const projectForm = useRef();
 
   function handleAddProject() {
-    projectForm.current.open();
+    projectForm.current.open({});
   }
 
   function handleDeleteProject(id, name) {
@@ -104,7 +104,9 @@ export default function Projects() {
                 <div className="absolute top-2 right-2 z-10">
                   <button
                     className={editButt}
-                    onClick={() => projectForm.current.open(project.id)}
+                    onClick={() =>
+                      projectForm.current.open({ projectId: project.id })
+                    }
                   >
                     Edit
                   </button>

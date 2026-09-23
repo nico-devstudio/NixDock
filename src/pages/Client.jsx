@@ -1,15 +1,18 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { deliverables } from "../data/deliverables";
 import { FolderDot, PackageCheck, Plus } from "lucide-react";
+import { useRef } from "react";
+import ProjectForm from "../components/ProjectForm";
 
 export default function Client() {
   const { id } = useParams();
-  const { clientList, projectList } = useOutletContext();
+  const { clientList, projectList, deliverableList, setProjectList } =
+    useOutletContext();
   const clientId = parseInt(id, 10);
   const client = clientList.find((client) => client.id === clientId);
   const clientProjects = projectList.filter(
     (project) => project.clientId === clientId,
   );
+  const projectForm = useRef();
   const cardsStyle =
     "border mt-5 border-gray-200 rounded-xl p-6 text-sm text-gray-500 hover:border-gray-300 hover:shadow-sm transition flex-1";
   const projectCardStyle =
@@ -19,12 +22,22 @@ export default function Client() {
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
   const primaryButt =
     "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
-  const clientDeliverables = deliverables.filter((deliverable) =>
+  const clientDeliverables = deliverableList.filter((deliverable) =>
     clientProjects.some((project) => project.id === deliverable.projectId),
   );
 
+  function handleAddProject() {
+    projectForm.current.open({ clientId });
+  }
+
   return (
     <div className="max-w-5xl">
+      <ProjectForm
+        clientList={clientList}
+        ref={projectForm}
+        setProjectList={setProjectList}
+        projectList={projectList}
+      />
       {client ? (
         <>
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -41,12 +54,23 @@ export default function Client() {
               </div>
               <div>
                 <p className="text-xs">Projects</p>
-                <p className="text-gray-900 font-semibold">{client.projects}</p>
+                <p className="text-gray-900 font-semibold">
+                  {clientProjects.length}
+                </p>
               </div>
             </div>
           </div>
           <section className="mt-10">
-            <h2 className="text-lg font-semibold text-gray-900">Projects</h2>
+            <div className="flex justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">Projects</h2>
+              <button
+                className={`${primaryButt} self-start`}
+                onClick={handleAddProject}
+              >
+                <Plus className="size-4" /> Add Project
+              </button>
+            </div>
+
             {clientProjects.length > 0 ? (
               <ul className="flex flex-col gap-3 mt-5">
                 {clientProjects.map((project) => (
@@ -91,7 +115,7 @@ export default function Client() {
                 <p className="text-sm text-gray-500 mb-5">
                   Add your first project to get started.
                 </p>
-                <button className={primaryButt}>
+                <button className={primaryButt} onClick={handleAddProject}>
                   <Plus className="size-4" /> Add Project
                 </button>
               </div>
