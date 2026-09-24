@@ -10,6 +10,7 @@ import Project from "./pages/Project";
 import Task from "./pages/Task";
 import Deliverable from "./pages/Deliverable";
 import Deliverables from "./pages/Deliverables";
+import NotFound from "./components/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "deliverables/:id",
         element: <Deliverable />,
+      },
+      {
+        path: "*",
+        element: <NotFound resource="Page" />,
       },
     ],
   },

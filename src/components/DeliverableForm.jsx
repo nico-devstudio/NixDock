@@ -25,6 +25,7 @@ const DeliverableForm = forwardRef(function DeliverableForm(
     console.log("date:", formData.date);
     console.log("selected project:", selectedProject);
     console.log("project deadline:", selectedProject?.deadline);
+
     if (selectedProject && formData.date > selectedProject.deadline) {
       setFormData((prev) => ({
         ...prev,
