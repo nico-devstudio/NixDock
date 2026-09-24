@@ -67,7 +67,6 @@ const ProjectForm = forwardRef(function ProjectForm(
           },
         ]);
     dialog.current.close();
-    event.target.reset();
   }
 
   return (

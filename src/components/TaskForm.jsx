@@ -38,16 +38,11 @@ const TaskForm = forwardRef(function TaskForm(
       }
 
       dialog.current.showModal();
-      console.log("formData before opening:", {
-        name: task?.name,
-        projectId: task?.projectId,
-        status: task?.status,
-        deadline: task?.deadline,
-      });
     },
   }));
 
   function handleSubmit(event) {
+    console.log("SUBMIT", formData, selectedTask);
     event.preventDefault();
 
     selectedTask

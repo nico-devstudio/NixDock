@@ -1,11 +1,9 @@
-import { clients } from "../data/clients";
-import { projects } from "../data/projects";
-import { tasks } from "../data/tasks";
-import { deliverables } from "../data/deliverables";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, ListChecks, PackageCheck } from "lucide-react";
 
 export default function Dashboard() {
+  const { clientList, projectList, deliverableList, taskList } =
+    useOutletContext();
   const cardsStyle =
     "border border-gray-200 rounded-xl p-6 text-sm text-gray-500 hover:border-gray-300 hover:shadow-sm transition flex-1";
   const numbersStyle = "text-2xl text-gray-950 block mt-5 ";
@@ -18,10 +16,10 @@ export default function Dashboard() {
   const h2Style = "text-lg font-medium text-gray-800";
   const viewAllStyle =
     "text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors";
-  const activeProjects = projects.filter(
+  const activeProjects = projectList.filter(
     (project) => project.status !== "Completed",
   );
-  const upcomingTasks = tasks
+  const upcomingTasks = taskList
     .filter(
       (task) =>
         task.status !== "Completed" &&
@@ -30,7 +28,7 @@ export default function Dashboard() {
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
     .slice(0, 3);
 
-  const recentDeliverables = [...deliverables]
+  const recentDeliverables = [...deliverableList]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
 
@@ -48,15 +46,15 @@ export default function Dashboard() {
         <section className="flex flex-col gap-4 md:flex-row">
           <div className={cardsStyle}>
             <p>Clients</p>
-            <strong className={numbersStyle}>{clients.length}</strong>
+            <strong className={numbersStyle}>{clientList.length}</strong>
           </div>
           <div className={cardsStyle}>
             <p>Projects</p>
-            <strong className={numbersStyle}>{projects.length}</strong>
+            <strong className={numbersStyle}>{projectList.length}</strong>
           </div>
           <div className={cardsStyle}>
             <p>Tasks</p>
-            <strong className={numbersStyle}>{tasks.length}</strong>
+            <strong className={numbersStyle}>{taskList.length}</strong>
           </div>
         </section>
 

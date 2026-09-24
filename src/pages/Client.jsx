@@ -2,17 +2,25 @@ import { Link, useOutletContext, useParams } from "react-router-dom";
 import { FolderDot, PackageCheck, Plus } from "lucide-react";
 import { useRef } from "react";
 import ProjectForm from "../components/ProjectForm";
+import TaskForm from "../components/TaskForm";
 
 export default function Client() {
   const { id } = useParams();
-  const { clientList, projectList, deliverableList, setProjectList } =
-    useOutletContext();
+  const {
+    clientList,
+    projectList,
+    deliverableList,
+    setProjectList,
+    taskList,
+    setTaskList,
+  } = useOutletContext();
   const clientId = parseInt(id, 10);
   const client = clientList.find((client) => client.id === clientId);
   const clientProjects = projectList.filter(
     (project) => project.clientId === clientId,
   );
   const projectForm = useRef();
+  const taskForm = useRef();
   const cardsStyle =
     "border mt-5 border-gray-200 rounded-xl p-6 text-sm text-gray-500 hover:border-gray-300 hover:shadow-sm transition flex-1";
   const projectCardStyle =
@@ -21,13 +29,20 @@ export default function Client() {
   const container =
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
   const primaryButt =
-    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center self-center cursor-pointer gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const clientDeliverables = deliverableList.filter((deliverable) =>
     clientProjects.some((project) => project.id === deliverable.projectId),
+  );
+  const clientTasks = taskList.filter((task) =>
+    clientProjects.some((project) => project.id === task.projectId),
   );
 
   function handleAddProject() {
     projectForm.current.open({ clientId });
+  }
+
+  function handleAddTask() {
+    taskForm.current.open({});
   }
 
   return (
@@ -37,6 +52,13 @@ export default function Client() {
         ref={projectForm}
         setProjectList={setProjectList}
         projectList={projectList}
+      />
+
+      <TaskForm
+        ref={taskForm}
+        projectList={projectList}
+        setTaskList={setTaskList}
+        taskList={taskList}
       />
       {client ? (
         <>
@@ -118,6 +140,78 @@ export default function Client() {
                 <button className={primaryButt} onClick={handleAddProject}>
                   <Plus className="size-4" /> Add Project
                 </button>
+              </div>
+            )}
+          </section>
+
+          <section className="mt-10">
+            <div className="flex justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 my-5">
+                Tasks
+              </h2>
+              <button className={primaryButt} onClick={handleAddTask}>
+                <Plus className="size-4" /> Add Task
+              </button>
+            </div>
+            {clientTasks.length > 0 ? (
+              <ul className="space-y-2 mt-5">
+                {clientTasks.map((task) => {
+                  const project = projectList.find(
+                    (project) => project.id === task.projectId,
+                  );
+
+                  return (
+                    <li key={task.id}>
+                      <Link
+                        to={`/tasks/${task.id}`}
+                        className={`${container} p-3 max-md:flex-col hover:border-gray-300 hover:shadow-sm transition`}
+                      >
+                        <div className="space-y-1 flex flex-col">
+                          <p className="font-medium text-gray-900">
+                            {task.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {project.name}
+                          </p>
+                          <p
+                            className={
+                              task.status === "Completed"
+                                ? `bg-green-100 text-green-700 ${projStatus}`
+                                : task.status === "In Progress"
+                                  ? `bg-blue-100 text-blue-700 ${projStatus}`
+                                  : `bg-gray-100 text-gray-600 ${projStatus}`
+                            }
+                          >
+                            {task.status}
+                          </p>
+                        </div>
+                        <div className="flex flex-col justify-center items-center">
+                          <p className="text-xs text-gray-500">Deadline</p>
+                          <p className="text-sm text-gray-700 self-center">
+                            {new Date(task.deadline).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              },
+                            )}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
+                <PackageCheck className="size-10 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  No tasks yet
+                </h2>
+                <p className="text-sm text-gray-500 mb-5">
+                  Tasks for this client will appear here.
+                </p>
               </div>
             )}
           </section>

@@ -13,7 +13,13 @@ export default function Projects() {
     "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
     "px-4 py-2 cursor-pointer text-base rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
-  const { clientList, projectList, setProjectList } = useOutletContext();
+  const {
+    clientList,
+    projectList,
+    setProjectList,
+    setTaskList,
+    setDeliverableList,
+  } = useOutletContext();
   const projectForm = useRef();
 
   function handleAddProject() {
@@ -23,8 +29,15 @@ export default function Projects() {
   function handleDeleteProject(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    confirmed &&
+    if (confirmed) {
       setProjectList((prevList) => prevList.filter((list) => list.id !== id));
+      setTaskList((prevList) =>
+        prevList.filter((task) => task.projectId !== id),
+      );
+      setDeliverableList((prevList) =>
+        prevList.filter((deliverable) => deliverable.projectId !== id),
+      );
+    }
   }
 
   return (

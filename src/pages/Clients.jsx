@@ -15,17 +15,47 @@ export default function Clients() {
   const editButt =
     "px-4 py-2 cursor-pointer text-base self-center rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
   const clientForm = useRef();
-  const { clientList, setClientList } = useOutletContext();
+  const {
+    clientList,
+    setClientList,
+    setProjectList,
+    setTaskList,
+    setDeliverableList,
+    projectList,
+  } = useOutletContext();
 
   function handleAddClient() {
     clientForm.current.open();
   }
 
   function handleDeleteClient(id, name) {
-    const confirmed = confirm(`Are you sure you want to delete ${name}?`);
+    const confirmed = confirm(
+      `Delete ${name}? This will also permanently delete all projects, tasks, and deliverables associated with this client.`,
+    );
 
-    confirmed &&
+    if (confirmed) {
+      const clientProjects = projectList.filter(
+        (project) => project.clientId === id,
+      );
       setClientList((prevList) => prevList.filter((list) => list.id !== id));
+      setTaskList((prevList) =>
+        prevList.filter(
+          (task) =>
+            !clientProjects.some((project) => project.id === task.projectId),
+        ),
+      );
+      setDeliverableList((prevList) =>
+        prevList.filter(
+          (deliverable) =>
+            !clientProjects.some(
+              (project) => project.id === deliverable.projectId,
+            ),
+        ),
+      );
+      setProjectList((prevList) =>
+        prevList.filter((project) => project.clientId !== id),
+      );
+    }
   }
 
   return (
@@ -55,34 +85,41 @@ export default function Clients() {
 
       <section className="flex gap-4 flex-col max-w-5xl">
         {clientList.length > 0 ? (
-          clientList.map((client) => (
-            <div key={client.id} className={cardsStyle}>
-              <Link
-                to={`/clients/${client.id}`}
-                className="flex flex-col flex-1  gap-2 "
-              >
-                <p className={nameStyle}>{client.name}</p>
-                <p className={`${mutedText} wrap-break-word`}>{client.email}</p>
+          clientList.map((client) => {
+            const clientProjects = projectList.filter(
+              (project) => project.clientId === client.id,
+            );
+            return (
+              <div key={client.id} className={cardsStyle}>
+                <Link
+                  to={`/clients/${client.id}`}
+                  className="flex flex-col flex-1  gap-2 "
+                >
+                  <p className={nameStyle}>{client.name}</p>
+                  <p className={`${mutedText} wrap-break-word`}>
+                    {client.email}
+                  </p>
 
-                <p className={`${mutedText} shrink-0`}>
-                  {client.projects}{" "}
-                  {client.projects > 1 ? "Projects" : "Project"}
-                </p>
-              </Link>
-              <button
-                className={editButt}
-                onClick={() => clientForm.current.open(client.id)}
-              >
-                Edit
-              </button>
-              <button
-                className={deleteButt}
-                onClick={() => handleDeleteClient(client.id, client.name)}
-              >
-                Delete
-              </button>
-            </div>
-          ))
+                  <p className={`${mutedText} shrink-0`}>
+                    {clientProjects.length}{" "}
+                    {clientProjects.length > 1 ? "Projects" : "Project"}
+                  </p>
+                </Link>
+                <button
+                  className={editButt}
+                  onClick={() => clientForm.current.open(client.id)}
+                >
+                  Edit
+                </button>
+                <button
+                  className={deleteButt}
+                  onClick={() => handleDeleteClient(client.id, client.name)}
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })
         ) : (
           <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">
             <UsersRound className="size-10 text-gray-400" />

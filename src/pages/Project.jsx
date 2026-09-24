@@ -26,7 +26,7 @@ export default function Project() {
   const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full mt-3";
   const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
   const primaryButt =
-    "flex items-center self-center gap-2 px-2 py-1 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center self-center gap-2 px-2 py-1 cursor-pointer rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const projTasks = project
     ? taskList.filter((task) => task.projectId === project.id)
     : [];
@@ -40,12 +40,12 @@ export default function Project() {
   const taskForm = useRef();
   const deliverableForm = useRef();
 
-  function handleAddTask(id) {
-    taskForm.current.open({ projectId: id });
+  function handleAddTask() {
+    taskForm.current.open({ projectId: project.id });
   }
 
   function handleAddDeliverable() {
-    deliverableForm.current.open({ projectId: id });
+    deliverableForm.current.open({ projectId: Number(id) });
   }
 
   return (
@@ -151,10 +151,7 @@ export default function Project() {
                 Tasks
               </h2>
               {projTasks.length > 0 ? (
-                <button
-                  className={primaryButt}
-                  onClick={() => handleAddTask(project.id)}
-                >
+                <button className={primaryButt} onClick={handleAddTask}>
                   <Plus className="size-4" /> Add Task
                 </button>
               ) : null}
@@ -203,10 +200,7 @@ export default function Project() {
                 <p className="text-sm text-gray-500 mb-5">
                   Create your first task to get started.
                 </p>
-                <button
-                  className={primaryButt}
-                  onClick={() => handleAddTask(project.id)}
-                >
+                <button className={primaryButt} onClick={handleAddTask}>
                   <Plus className="size-4" /> Add Task
                 </button>
               </div>
@@ -218,10 +212,7 @@ export default function Project() {
               <h2 className="text-lg font-semibold text-gray-900 my-5">
                 Deliverables
               </h2>
-              <button
-                className={primaryButt}
-                onClick={() => handleAddDeliverable(project.id)}
-              >
+              <button className={primaryButt} onClick={handleAddDeliverable}>
                 <Plus className="size-4" /> Add Deliverable
               </button>
             </div>
