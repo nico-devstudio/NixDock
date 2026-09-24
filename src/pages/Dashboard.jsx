@@ -2,7 +2,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, ListChecks, PackageCheck } from "lucide-react";
 
 export default function Dashboard() {
-  const { clientList, projectList, deliverableList, taskList } =
+  const { clientList, projectList, deliverableList, taskList, setTaskList } =
     useOutletContext();
   const cardsStyle =
     "border border-gray-200 rounded-xl p-6 text-sm text-gray-500 hover:border-gray-300 hover:shadow-sm transition flex-1";
@@ -19,6 +19,7 @@ export default function Dashboard() {
   const activeProjects = projectList.filter(
     (project) => project.status !== "Completed",
   );
+
   const upcomingTasks = taskList
     .filter(
       (task) =>
@@ -31,6 +32,14 @@ export default function Dashboard() {
   const recentDeliverables = [...deliverableList]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
+
+  function handleTaskComplete(taskId) {
+    setTaskList((prevList) =>
+      prevList.map((task) =>
+        task.id === taskId ? { ...task, status: "Completed" } : task,
+      ),
+    );
+  }
 
   return (
     <>
@@ -119,7 +128,7 @@ export default function Dashboard() {
                   key={task.id}
                   className="border border-gray-200 rounded-md p-3 flex gap-3 hover:border-gray-300 hover:shadow-sm transition"
                 >
-                  <input type="checkbox" />
+                  <input type="checkbox" onChange={handleTaskComplete} />
                   <Link
                     to={`/tasks/${task.id}`}
                     className="flex justify-between flex-1 min-w-0"
