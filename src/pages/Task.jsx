@@ -70,11 +70,11 @@ export default function Task() {
       <section className="max-w-5xl">
         <h2 className="text-lg font-semibold text-gray-900">Task Details</h2>
         <div className="border border-gray-200 rounded-xl p-6 mt-4 flex flex-col gap-6">
-          <div className="flex justify-between">
+          <div className="flex justify-between max-md:flex-col max-md:text-center">
             <p className="text-gray-500">Status</p>
             <p>{task.status}</p>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between max-md:flex-col max-md:text-center">
             <p className="text-gray-500">Project</p>
             {project ? (
               <Link
@@ -87,7 +87,7 @@ export default function Task() {
               <p className="text-gray-500">No project found.</p>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between max-md:flex-col max-md:text-center">
             <p className="text-gray-500">Client</p>
             {client ? (
               <Link
@@ -100,7 +100,7 @@ export default function Task() {
               <p className="text-gray-500">No client found.</p>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between max-md:flex-col max-md:text-center">
             <p className="text-gray-500">Deadline</p>
             <p>
               {new Date(task.deadline).toLocaleDateString("en-US", {

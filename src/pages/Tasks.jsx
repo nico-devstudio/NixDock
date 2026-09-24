@@ -57,11 +57,11 @@ export default function Tasks() {
             );
 
             return (
-              <li key={task.id} className="relative">
-                <Link
-                  to={`/tasks/${task.id}`}
-                  className="border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition flex flex-col gap-2"
-                >
+              <li
+                key={task.id}
+                className="relative border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition flex flex-col gap-2"
+              >
+                <Link to={`/tasks/${task.id}`}>
                   <p className="text-gray-900 font-medium text-base">
                     {task.name}
                   </p>
@@ -92,7 +92,7 @@ export default function Tasks() {
                     </p>
                   </div>
                 </Link>
-                <div className="absolute top-3 right-2 z-10">
+                <div className="absolute top-3 right-2 z-10 max-md:static">
                   <button
                     className={editButt}
                     onClick={() => taskForm.current.open({ taskId: task.id })}

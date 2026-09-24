@@ -16,9 +16,10 @@ export default function Dashboard() {
   const h2Style = "text-lg font-medium text-gray-800";
   const viewAllStyle =
     "text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors";
-  const activeProjects = projectList.filter(
-    (project) => project.status !== "Completed",
-  );
+  const activeProjects = projectList
+    .filter((project) => project.status !== "Completed")
+    .sort((a, b) => b.progress - a.progress)
+    .slice(0, 3);
 
   const upcomingTasks = taskList
     .filter(
@@ -34,11 +35,12 @@ export default function Dashboard() {
     .slice(0, 3);
 
   function handleTaskComplete(taskId) {
-    setTaskList((prevList) =>
-      prevList.map((task) =>
+    setTaskList((prevList) => {
+      const updatedList = prevList.map((task) =>
         task.id === taskId ? { ...task, status: "Completed" } : task,
-      ),
-    );
+      );
+      return updatedList;
+    });
   }
 
   return (
@@ -128,7 +130,12 @@ export default function Dashboard() {
                   key={task.id}
                   className="border border-gray-200 rounded-md p-3 flex gap-3 hover:border-gray-300 hover:shadow-sm transition"
                 >
-                  <input type="checkbox" onChange={handleTaskComplete} />
+                  <input
+                    aria-label={`Mark ${task.name} as completed`}
+                    checked={task.status === "Completed"}
+                    type="checkbox"
+                    onChange={() => handleTaskComplete(task.id)}
+                  />
                   <Link
                     to={`/tasks/${task.id}`}
                     className="flex justify-between flex-1 min-w-0"

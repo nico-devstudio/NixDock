@@ -5,11 +5,11 @@ import ClientForm from "../components/ClientForm";
 
 export default function Clients() {
   const cardsStyle =
-    "flex justify-between border border-gray-200 rounded-xl p-6 text-sm text-gray-800 cursor-pointer hover:border-gray-300 hover:shadow-sm transition";
+    "flex max-md:flex-col max-md:items-center max-md:text-center justify-between border border-gray-200 rounded-xl p-6 text-sm text-gray-800 cursor-pointer hover:border-gray-300 hover:shadow-sm transition";
   const mutedText = "text-gray-400 my-auto";
   const nameStyle = "text-gray-900 font-semibold text-base";
   const primaryButt =
-    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center self-start gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const deleteButt =
     "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
@@ -105,18 +105,20 @@ export default function Clients() {
                     {clientProjects.length > 1 ? "Projects" : "Project"}
                   </p>
                 </Link>
-                <button
-                  className={editButt}
-                  onClick={() => clientForm.current.open(client.id)}
-                >
-                  Edit
-                </button>
-                <button
-                  className={deleteButt}
-                  onClick={() => handleDeleteClient(client.id, client.name)}
-                >
-                  Delete
-                </button>
+                <div>
+                  <button
+                    className={editButt}
+                    onClick={() => clientForm.current.open(client.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className={deleteButt}
+                    onClick={() => handleDeleteClient(client.id, client.name)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             );
           })

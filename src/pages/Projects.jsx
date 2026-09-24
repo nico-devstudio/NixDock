@@ -114,7 +114,7 @@ export default function Projects() {
                     </p>
                   </div>
                 </Link>
-                <div className="absolute top-2 right-2 z-10">
+                <div className="absolute top-2 right-2 z-10 max-md:static">
                   <button
                     className={editButt}
                     onClick={() =>

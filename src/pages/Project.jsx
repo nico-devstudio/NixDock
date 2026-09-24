@@ -22,7 +22,7 @@ export default function Project() {
     (client) => project && client.id === project.clientId,
   );
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full self-start";
-  const projDetails = "flex justify-between";
+  const projDetails = "flex justify-between max-md:flex-col max-md:text-center";
   const projDetailLabel = "text-gray-500";
   const actProjOuterProgStyle = "h-2 bg-slate-200 rounded-full mt-3";
   const actProjInnerProgStyle = "h-2 bg-blue-500 rounded-full";
@@ -209,7 +209,7 @@ export default function Project() {
           </section>
 
           <section className="mt-10">
-            <div className="flex justify-between">
+            <div className="flex justify-between max-md:flex-col max-md:items-center">
               <h2 className="text-lg font-semibold text-gray-900 my-5">
                 Deliverables
               </h2>

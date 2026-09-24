@@ -34,7 +34,7 @@ const ClientForm = forwardRef(function ClientForm(
           });
         })
       : setClientList((prevList) => {
-          const newdata = { ...data, projects: 0, id: Date.now() };
+          const newdata = { ...data, id: Date.now() };
           const updatedClient = [...prevList, newdata];
           return updatedClient;
         });
@@ -45,30 +45,52 @@ const ClientForm = forwardRef(function ClientForm(
 
   return (
     <>
-      <dialog ref={dialog}>
-        <form onSubmit={handleSubmit} key={selectedClient?.id}>
-          <label htmlFor="name">Name</label>
+      <dialog
+        ref={dialog}
+        className="rounded-xl border border-gray-200 p-6 shadow-lg w-full max-w-md m-auto"
+      >
+        <form
+          onSubmit={handleSubmit}
+          key={selectedClient?.id}
+          className="flex flex-col gap-4"
+        >
+          <label htmlFor="name" className="text-sm font-medium text-gray-700">
+            Name
+          </label>
           <input
             required
             type="text"
             id="name"
             name="name"
             defaultValue={selectedClient?.name}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             required
             type="email"
             id="email"
             name="email"
             defaultValue={selectedClient?.email}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
-          <button type="button" onClick={() => dialog.current.close()}>
-            Cancel
-          </button>
-          <button type="submit">
-            {selectedClient ? "Edit Client" : "Add Client"}
-          </button>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => dialog.current.close()}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+              {selectedClient ? "Edit Client" : "Add Client"}
+            </button>
+          </div>
         </form>
       </dialog>
     </>
