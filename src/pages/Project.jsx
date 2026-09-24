@@ -3,6 +3,7 @@ import { ListChecks, PackageCheck, Plus } from "lucide-react";
 import { useRef } from "react";
 import TaskForm from "../components/TaskForm";
 import DeliverableForm from "../components/DeliverableForm";
+import NotFound from "../components/NotFound";
 
 export default function Project() {
   const { id } = useParams();
@@ -45,7 +46,7 @@ export default function Project() {
   }
 
   function handleAddDeliverable() {
-    deliverableForm.current.open({ projectId: Number(id) });
+    deliverableForm.current.open({ projectId: project.id });
   }
 
   return (
@@ -254,7 +255,7 @@ export default function Project() {
           </section>
         </div>
       ) : (
-        <p>Project not found</p>
+        <NotFound resource="Project" />
       )}
     </>
   );

@@ -6,6 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import DeliverableForm from "../components/DeliverableForm";
+import NotFound from "../components/NotFound";
 
 export default function Deliverable() {
   const { projectList, clientList, deliverableList, setDeliverableList } =
@@ -80,7 +81,7 @@ export default function Deliverable() {
                     {project.name}
                   </Link>
                 ) : (
-                  "Project not found"
+                  <NotFound resource="Project" />
                 )}
               </p>
             </div>
@@ -95,7 +96,7 @@ export default function Deliverable() {
                     {client.name}
                   </Link>
                 ) : (
-                  "Client not found"
+                  <NotFound resource="Client" />
                 )}
               </p>
             </div>

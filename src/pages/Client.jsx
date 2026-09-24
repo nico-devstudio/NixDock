@@ -3,6 +3,7 @@ import { FolderDot, PackageCheck, Plus } from "lucide-react";
 import { useRef } from "react";
 import ProjectForm from "../components/ProjectForm";
 import TaskForm from "../components/TaskForm";
+import NotFound from "../components/NotFound";
 
 export default function Client() {
   const { id } = useParams();
@@ -257,7 +258,7 @@ export default function Client() {
           </section>
         </>
       ) : (
-        <p>Client not found</p>
+        <NotFound resource="Client" />
       )}
     </div>
   );

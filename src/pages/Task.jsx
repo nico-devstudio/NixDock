@@ -6,6 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import TaskForm from "../components/TaskForm";
+import NotFound from "../components/NotFound";
 
 export default function Task() {
   const { id } = useParams();
@@ -127,6 +128,6 @@ export default function Task() {
       </section>
     </>
   ) : (
-    "Task not found."
+    <NotFound resource="Task" />
   );
 }
