@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 const ClientForm = forwardRef(function ClientForm(
-  { setList, clientList },
+  { setClientList, clientList },
   ref,
 ) {
   const dialog = useRef();
@@ -21,20 +21,19 @@ const ClientForm = forwardRef(function ClientForm(
     const fd = new FormData(event.target);
     const data = Object.fromEntries(fd.entries());
     selectedClient
-      ? setList((prevList) => {
+      ? setClientList((prevList) => {
           return prevList.map((list) => {
             if (list.id === selectedClient.id) {
               const updatedClient = {
                 ...data,
                 id: selectedClient.id,
-                projects: selectedClient.projects,
               };
               return updatedClient;
             }
             return list;
           });
         })
-      : setList((prevList) => {
+      : setClientList((prevList) => {
           const newdata = { ...data, projects: 0, id: Date.now() };
           const updatedClient = [...prevList, newdata];
           return updatedClient;

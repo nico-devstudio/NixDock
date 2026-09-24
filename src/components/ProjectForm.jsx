@@ -13,6 +13,8 @@ const ProjectForm = forwardRef(function ProjectForm(
     deadline: "",
     progress: 0,
   });
+  const today = new Date();
+  const minDate = today.toISOString().slice(0, 10);
 
   useImperativeHandle(ref, () => ({
     open({ projectId, clientId }) {
@@ -126,6 +128,7 @@ const ProjectForm = forwardRef(function ProjectForm(
           <input
             required
             type="date"
+            min={minDate}
             id="deadline"
             name="deadline"
             value={formData.deadline}

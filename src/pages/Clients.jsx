@@ -11,7 +11,7 @@ export default function Clients() {
   const primaryButt =
     "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const deleteButt =
-    "px-4 py-2 cursor-pointer self-center text-md rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
+    "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
     "px-4 py-2 cursor-pointer text-base self-center rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
   const clientForm = useRef();
@@ -75,7 +75,7 @@ export default function Clients() {
 
       <ClientForm
         ref={clientForm}
-        setList={setClientList}
+        setClientList={setClientList}
         clientList={clientList}
       />
 

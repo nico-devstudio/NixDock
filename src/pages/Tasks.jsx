@@ -21,8 +21,9 @@ export default function Tasks() {
   function handleDeleteTask(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    confirmed &&
+    if (confirmed) {
       setTaskList((prevList) => prevList.filter((list) => list.id !== id));
+    }
   }
 
   return (

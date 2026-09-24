@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 const DeliverableForm = forwardRef(function DeliverableForm(
   { setDeliverableList, deliverableList, projectList },
@@ -11,6 +17,21 @@ const DeliverableForm = forwardRef(function DeliverableForm(
     projectId: "",
     date: "",
   });
+  const selectedProject = projectList.find(
+    (project) => project.id === formData.projectId,
+  );
+
+  useEffect(() => {
+    console.log("date:", formData.date);
+    console.log("selected project:", selectedProject);
+    console.log("project deadline:", selectedProject?.deadline);
+    if (selectedProject && formData.date > selectedProject.deadline) {
+      setFormData((prev) => ({
+        ...prev,
+        date: "",
+      }));
+    }
+  }, [formData.date, selectedProject?.deadline]);
 
   useImperativeHandle(ref, () => ({
     open({ deliverableId, projectId }) {
@@ -110,6 +131,7 @@ const DeliverableForm = forwardRef(function DeliverableForm(
             type="date"
             id="date"
             name="date"
+            max={selectedProject?.deadline}
             value={formData.date}
             onChange={(event) =>
               setFormData((prev) => ({

@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 const TaskForm = forwardRef(function TaskForm(
   { setTaskList, taskList, projectList },
@@ -12,6 +18,17 @@ const TaskForm = forwardRef(function TaskForm(
     status: "",
     deadline: "",
   });
+  const selectedProject = projectList.find(
+    (project) => project.id === formData.projectId,
+  );
+  useEffect(() => {
+    if (selectedProject && formData.deadline > selectedProject.deadline) {
+      setFormData((prev) => ({
+        ...prev,
+        deadline: "",
+      }));
+    }
+  }, [formData.deadline, selectedProject?.deadline]);
 
   useImperativeHandle(ref, () => ({
     open({ taskId, projectId }) {
@@ -42,7 +59,6 @@ const TaskForm = forwardRef(function TaskForm(
   }));
 
   function handleSubmit(event) {
-    console.log("SUBMIT", formData, selectedTask);
     event.preventDefault();
 
     selectedTask
@@ -130,6 +146,7 @@ const TaskForm = forwardRef(function TaskForm(
             id="deadline"
             name="deadline"
             value={formData.deadline}
+            max={selectedProject?.deadline}
             onChange={(event) =>
               setFormData((prev) => ({
                 ...prev,

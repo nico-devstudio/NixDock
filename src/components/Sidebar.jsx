@@ -3,8 +3,9 @@ import {
   Settings,
   LayoutDashboard,
   Users,
-  Check,
   FolderKanban,
+  ListChecks,
+  PackageCheck,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -48,8 +49,17 @@ export default function Sidebar() {
         }
         to="/tasks"
       >
-        <Check className="max-md:mx-auto" />
+        <ListChecks className="max-md:mx-auto" />
         <span className="hidden md:inline">Tasks</span>
+      </NavLink>
+      <NavLink
+        className={({ isActive }) =>
+          isActive ? sideBarActiveStyle : sideBarPagesStyle
+        }
+        to="/deliverables"
+      >
+        <PackageCheck className="max-md:mx-auto" />
+        <span className="hidden md:inline">Deliverables</span>
       </NavLink>
       <NavLink
         className={({ isActive }) =>
