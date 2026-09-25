@@ -19,6 +19,7 @@ export default function Projects() {
     setProjectList,
     setTaskList,
     setDeliverableList,
+    taskList,
   } = useOutletContext();
   const projectForm = useRef();
 
@@ -65,9 +66,21 @@ export default function Projects() {
       <ul className="flex flex-col gap-3 max-w-5xl">
         {projectList.length > 0 ? (
           projectList.map((project) => {
+            const projectTasks = taskList.filter(
+              (task) => task.projectId === project.id,
+            );
+            const completedTasks = projectTasks.filter(
+              (task) => task.status === "Completed",
+            );
             const client = clientList.find(
               (client) => client.id === project.clientId,
             );
+            const totalTasks = projectTasks.length;
+            const completedTaskCount = completedTasks.length;
+            const progress = totalTasks
+              ? (completedTaskCount / totalTasks) * 100
+              : 0;
+
             return (
               <li
                 key={project.id}
@@ -87,10 +100,10 @@ export default function Projects() {
                     <div className={`${actProjOuterProgStyle} flex-1`}>
                       <div
                         className={actProjInnerProgStyle}
-                        style={{ width: `${project.progress}%` }}
+                        style={{ width: `${progress}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm text-gray-500">{project.progress}%</p>
+                    <p className="text-sm text-gray-500">{progress}%</p>
                   </div>
 
                   <div className="flex justify-between items-center">

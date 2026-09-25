@@ -18,9 +18,27 @@ export default function Dashboard() {
     "text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors";
   const activeProjects = projectList
     .filter((project) => project.status !== "Completed")
+    .map((project) => {
+      const projectTasks = taskList.filter(
+        (task) => task.projectId === project.id,
+      );
+
+      const completedTasks = projectTasks.filter(
+        (task) => task.status === "Completed",
+      );
+
+      const totalTasks = projectTasks.length;
+      const completedTaskCount = completedTasks.length;
+
+      const progress = totalTasks ? (completedTaskCount / totalTasks) * 100 : 0;
+
+      return {
+        ...project,
+        progress,
+      };
+    })
     .sort((a, b) => b.progress - a.progress)
     .slice(0, 3);
-
   const upcomingTasks = taskList
     .filter(
       (task) =>
@@ -78,28 +96,30 @@ export default function Dashboard() {
           </div>
           {activeProjects.length > 0 ? (
             <ul className="space-y-5">
-              {activeProjects.map((activeProj) => (
-                <li key={activeProj.id}>
-                  <Link to={`/projects/${activeProj.id}`}>
-                    <div
-                      className={`${container} p-5 hover:border-gray-300 hover:shadow-sm transition`}
-                    >
-                      <p className={activeProjectTitleStyle}>
-                        {activeProj.name}
-                      </p>
-                      <p className={`${mutedText} shrink-0`}>
-                        {activeProj.progress}%
-                      </p>
+              {activeProjects.map((activeProj) => {
+                return (
+                  <li key={activeProj.id}>
+                    <Link to={`/projects/${activeProj.id}`}>
+                      <div
+                        className={`${container} p-5 hover:border-gray-300 hover:shadow-sm transition`}
+                      >
+                        <p className={activeProjectTitleStyle}>
+                          {activeProj.name}
+                        </p>
+                        <p className={`${mutedText} shrink-0`}>
+                          {activeProj.progress}%
+                        </p>
+                      </div>
+                    </Link>
+                    <div className={actProjOuterProgStyle}>
+                      <div
+                        className={actProjInnerProgStyle}
+                        style={{ width: `${activeProj.progress}%` }}
+                      ></div>
                     </div>
-                  </Link>
-                  <div className={actProjOuterProgStyle}>
-                    <div
-                      className={actProjInnerProgStyle}
-                      style={{ width: `${activeProj.progress}%` }}
-                    ></div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <div className="border border-gray-200 rounded-xl p-8 flex flex-col items-center gap-3 text-center">
