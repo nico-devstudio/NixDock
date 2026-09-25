@@ -6,7 +6,7 @@ import { useRef } from "react";
 export default function Tasks() {
   const status = "text-xs font-medium px-2.5 py-1 rounded-full";
   const primaryButt =
-    "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center max-md:self-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const deleteButt =
     "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
@@ -28,8 +28,10 @@ export default function Tasks() {
 
   return (
     <>
-      <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl">
-        <h1 className="text-2xl font-semibold text-gray-900">Tasks</h1>
+      <div className="flex max-md:flex-col justify-between max-md:gap-3 mb-10 max-w-5xl">
+        <h1 className="text-2xl font-semibold text-gray-900 max-md:text-center">
+          Tasks
+        </h1>
         {taskList.length > 0 ? (
           <button className={primaryButt} onClick={handleAddTask}>
             <Plus className="size-4" /> Add Task

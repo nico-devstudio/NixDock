@@ -22,7 +22,8 @@ const DeliverableForm = forwardRef(function DeliverableForm(
   );
 
   useEffect(() => {
-    if (selectedProject && formData.date > selectedProject.deadline) {
+    const selectedProjectDeadline = selectedProject?.deadline;
+    if (selectedProjectDeadline && formData.date > selectedProjectDeadline) {
       setFormData((prev) => ({
         ...prev,
         date: "",

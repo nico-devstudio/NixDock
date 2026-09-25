@@ -22,7 +22,11 @@ const TaskForm = forwardRef(function TaskForm(
     (project) => project.id === formData.projectId,
   );
   useEffect(() => {
-    if (selectedProject && formData.deadline > selectedProject.deadline) {
+    const selectedProjectDeadline = selectedProject?.deadline;
+    if (
+      selectedProjectDeadline &&
+      formData.deadline > selectedProjectDeadline
+    ) {
       setFormData((prev) => ({
         ...prev,
         deadline: "",

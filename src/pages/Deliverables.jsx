@@ -8,7 +8,7 @@ export default function Deliverables() {
     "flex flex-wrap justify-between border border-gray-200 rounded-md";
   const mutedText = "text-gray-400";
   const primaryButt =
-    "flex items-center gap-2 self-start px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center gap-2 self-center px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const { deliverableList, projectList, setDeliverableList } =
     useOutletContext();
   const deliverableForm = useRef();
@@ -19,11 +19,17 @@ export default function Deliverables() {
 
   return (
     <>
-      <div className="flex justify-between max-md:flex-col max-w-5xl">
-        <h1 className="text-2xl font-semibold text-gray-900">Deliverables</h1>
-        <button className={primaryButt} onClick={handleAddDeliverable}>
-          <Plus className="size-4" /> Add Deliverable
-        </button>
+      <div className="flex justify-between max-md:flex-col max-md:gap-3 max-w-5xl">
+        <h1 className="text-2xl font-semibold text-gray-900 max-md:text-center">
+          Deliverables
+        </h1>
+        {deliverableList.length > 0 ? (
+          <button className={primaryButt} onClick={handleAddDeliverable}>
+            <Plus className="size-4" /> Add Deliverable
+          </button>
+        ) : (
+          ""
+        )}
       </div>
 
       <DeliverableForm

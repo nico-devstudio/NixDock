@@ -50,11 +50,13 @@ export default function Projects() {
         projectList={projectList}
       />
 
-      <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl">
-        <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+      <div className="flex max-md:flex-col justify-between mb-10 max-w-5xl max-md: gap-3">
+        <h1 className="text-2xl font-semibold text-gray-900 max-md:text-center">
+          Projects
+        </h1>
         {projectList.length > 0 ? (
           <button
-            className={`${primaryButt} self-start`}
+            className={`${primaryButt} self-start max-md:self-center`}
             onClick={handleAddProject}
           >
             <Plus className="size-4" /> Add Project
