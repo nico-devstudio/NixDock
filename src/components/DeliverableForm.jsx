@@ -22,10 +22,6 @@ const DeliverableForm = forwardRef(function DeliverableForm(
   );
 
   useEffect(() => {
-    console.log("date:", formData.date);
-    console.log("selected project:", selectedProject);
-    console.log("project deadline:", selectedProject?.deadline);
-
     if (selectedProject && formData.date > selectedProject.deadline) {
       setFormData((prev) => ({
         ...prev,
@@ -91,9 +87,17 @@ const DeliverableForm = forwardRef(function DeliverableForm(
 
   return (
     <>
-      <dialog ref={dialog}>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="deliverable-name">Deliverable name</label>
+      <dialog
+        ref={dialog}
+        className="rounded-xl border border-gray-200 p-6 shadow-lg w-full max-w-md m-auto"
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label
+            htmlFor="deliverable-name"
+            className="text-sm font-medium text-gray-700"
+          >
+            Deliverable name
+          </label>
           <input
             required
             type="text"
@@ -106,7 +110,14 @@ const DeliverableForm = forwardRef(function DeliverableForm(
                 name: event.target.value,
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
+          <label
+            htmlFor="project"
+            className="text-sm font-medium text-gray-700"
+          >
+            Project
+          </label>
           <select
             name="projectId"
             id="project"
@@ -118,6 +129,7 @@ const DeliverableForm = forwardRef(function DeliverableForm(
                 projectId: Number(event.target.value),
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           >
             <option value="">Select a project</option>
             {projectList.map((project) => (
@@ -126,7 +138,9 @@ const DeliverableForm = forwardRef(function DeliverableForm(
               </option>
             ))}
           </select>
-          <label htmlFor="date">Date</label>
+          <label htmlFor="date" className="text-sm font-medium text-gray-700">
+            Date
+          </label>
           <input
             required
             type="date"
@@ -140,13 +154,23 @@ const DeliverableForm = forwardRef(function DeliverableForm(
                 date: event.target.value,
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
-          <button type="button" onClick={() => dialog.current.close()}>
-            Cancel
-          </button>
-          <button type="submit">
-            {selectedDeliverable ? "Edit deliverable" : "Add deliverable"}
-          </button>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => dialog.current.close()}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+              {selectedDeliverable ? "Edit deliverable" : "Add deliverable"}
+            </button>
+          </div>
         </form>
       </dialog>
     </>
