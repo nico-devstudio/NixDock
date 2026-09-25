@@ -20,6 +20,8 @@ const DeliverableForm = forwardRef(function DeliverableForm(
   const selectedProject = projectList.find(
     (project) => project.id === formData.projectId,
   );
+  const today = new Date();
+  const minDate = today.toISOString().slice(0, 10);
 
   useEffect(() => {
     const selectedProjectDeadline = selectedProject?.deadline;
@@ -147,6 +149,7 @@ const DeliverableForm = forwardRef(function DeliverableForm(
             type="date"
             id="date"
             name="date"
+            min={minDate}
             max={selectedProject?.deadline}
             value={formData.date}
             onChange={(event) =>

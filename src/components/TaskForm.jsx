@@ -21,6 +21,9 @@ const TaskForm = forwardRef(function TaskForm(
   const selectedProject = projectList.find(
     (project) => project.id === formData.projectId,
   );
+  const today = new Date();
+  const minDate = today.toISOString().slice(0, 10);
+
   useEffect(() => {
     const selectedProjectDeadline = selectedProject?.deadline;
     if (
@@ -174,6 +177,7 @@ const TaskForm = forwardRef(function TaskForm(
             type="date"
             id="deadline"
             name="deadline"
+            min={minDate}
             value={formData.deadline}
             max={selectedProject?.deadline}
             onChange={(event) =>

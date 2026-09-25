@@ -35,6 +35,12 @@ export default function Task() {
 
   return task ? (
     <>
+      <Link
+        to="/tasks"
+        className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-5"
+      >
+        ← Back to Tasks
+      </Link>
       <div className="flex flex-col gap-2 mb-10 ">
         <h1 className="text-2xl font-semibold text-gray-900">{task.name}</h1>
         {project ? (

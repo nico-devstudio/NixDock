@@ -41,6 +41,12 @@ export default function Deliverable() {
 
   return (
     <>
+      <Link
+        to="/deliverables"
+        className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-5"
+      >
+        ← Back to Deliverables
+      </Link>
       <h1 className="text-2xl font-semibold text-gray-900 mb-6">Deliverable</h1>
 
       <DeliverableForm
@@ -119,7 +125,7 @@ export default function Deliverable() {
           </div>
         </div>
       ) : (
-        <p>No Deliverables found.</p>
+        <NotFound resource="Deliverable" />
       )}
     </>
   );

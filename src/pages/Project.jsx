@@ -41,6 +41,16 @@ export default function Project() {
   const taskForm = useRef();
   const deliverableForm = useRef();
 
+  const completedTasks = projTasks.filter(
+    (task) => task.status === "Completed",
+  );
+
+  const totalTasks = projTasks.length;
+  const completedTaskCount = completedTasks.length;
+  const progress = totalTasks
+    ? Math.round((completedTaskCount / totalTasks) * 100)
+    : 0;
+
   function handleAddTask() {
     taskForm.current.open({ projectId: project.id });
   }
@@ -51,6 +61,12 @@ export default function Project() {
 
   return (
     <>
+      <Link
+        to="/projects"
+        className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-5"
+      >
+        ← Back to Projects
+      </Link>
       <TaskForm
         ref={taskForm}
         projectList={projectList}
@@ -138,10 +154,10 @@ export default function Project() {
                 <div className={`${actProjOuterProgStyle} flex-1`}>
                   <div
                     className={actProjInnerProgStyle}
-                    style={{ width: `${project.progress}%` }}
+                    style={{ width: `${progress}%` }}
                   ></div>
                 </div>
-                <p className="text-sm text-gray-500">{project.progress}%</p>
+                <p className="text-sm text-gray-500">{progress}%</p>
               </div>
             </div>
           </section>
@@ -159,38 +175,40 @@ export default function Project() {
             </div>
             {projTasks.length > 0 ? (
               <ul className="flex flex-col gap-2">
-                {projTasks.map((task) => (
-                  <li key={task.id}>
-                    <Link
-                      to={`/tasks/${task.id}`}
-                      className="justify-between flex border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
-                    >
-                      <div className="flex flex-col gap-2">
-                        <p className="text-gray-800 font-medium text-base">
-                          {task.name}
+                {projTasks.map((task) => {
+                  return (
+                    <li key={task.id}>
+                      <Link
+                        to={`/tasks/${task.id}`}
+                        className="justify-between flex border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <p className="text-gray-800 font-medium text-base">
+                            {task.name}
+                          </p>
+                          <p
+                            className={
+                              task.status === "Completed"
+                                ? `bg-green-100 text-green-700 ${projStatus}`
+                                : task.status === "In Progress"
+                                  ? `bg-blue-100 text-blue-700 ${projStatus}`
+                                  : `bg-gray-100 text-gray-600 ${projStatus}`
+                            }
+                          >
+                            {task.status}
+                          </p>
+                        </div>
+                        <p className="self-center text-sm text-gray-500">
+                          {new Date(task.deadline).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
                         </p>
-                        <p
-                          className={
-                            task.status === "Completed"
-                              ? `bg-green-100 text-green-700 ${projStatus}`
-                              : task.status === "In Progress"
-                                ? `bg-blue-100 text-blue-700 ${projStatus}`
-                                : `bg-gray-100 text-gray-600 ${projStatus}`
-                          }
-                        >
-                          {task.status}
-                        </p>
-                      </div>
-                      <p className="self-center text-sm text-gray-500">
-                        {new Date(task.deadline).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <div className="border border-gray-200 rounded-xl p-12 flex flex-col items-center gap-4 text-center max-w-5xl mt-5">

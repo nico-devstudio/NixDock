@@ -30,7 +30,9 @@ export default function Dashboard() {
       const totalTasks = projectTasks.length;
       const completedTaskCount = completedTasks.length;
 
-      const progress = totalTasks ? (completedTaskCount / totalTasks) * 100 : 0;
+      const progress = totalTasks
+        ? Math.round((completedTaskCount / totalTasks) * 100)
+        : 0;
 
       return {
         ...project,

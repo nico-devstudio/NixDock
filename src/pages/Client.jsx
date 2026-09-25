@@ -48,6 +48,12 @@ export default function Client() {
 
   return (
     <div className="max-w-5xl">
+      <Link
+        to="/clients"
+        className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-5"
+      >
+        ← Back to Clients
+      </Link>
       <ProjectForm
         clientList={clientList}
         ref={projectForm}

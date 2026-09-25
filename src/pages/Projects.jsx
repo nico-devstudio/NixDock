@@ -80,7 +80,7 @@ export default function Projects() {
             const totalTasks = projectTasks.length;
             const completedTaskCount = completedTasks.length;
             const progress = totalTasks
-              ? (completedTaskCount / totalTasks) * 100
+              ? Math.round((completedTaskCount / totalTasks) * 100)
               : 0;
 
             return (

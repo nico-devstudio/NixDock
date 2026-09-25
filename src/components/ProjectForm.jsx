@@ -11,7 +11,6 @@ const ProjectForm = forwardRef(function ProjectForm(
     clientId: "",
     status: "",
     deadline: "",
-    progress: 0,
   });
   const today = new Date();
   const minDate = today.toISOString().slice(0, 10);
@@ -27,7 +26,6 @@ const ProjectForm = forwardRef(function ProjectForm(
           clientId: project.clientId,
           status: project.status,
           deadline: project.deadline,
-          progress: Number(project.progress),
         });
       } else {
         setSelectedProject(undefined);
@@ -37,7 +35,6 @@ const ProjectForm = forwardRef(function ProjectForm(
           clientId: clientId || "",
           status: "",
           deadline: "",
-          progress: 0,
         });
       }
 
