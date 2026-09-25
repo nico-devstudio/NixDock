@@ -87,9 +87,17 @@ const TaskForm = forwardRef(function TaskForm(
 
   return (
     <>
-      <dialog ref={dialog}>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="task-name">Task name</label>
+      <dialog
+        ref={dialog}
+        className="rounded-xl border border-gray-200 p-6 shadow-lg w-full max-w-md m-auto"
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label
+            htmlFor="task-name"
+            className="text-sm font-medium text-gray-700"
+          >
+            Task name
+          </label>
           <input
             required
             type="text"
@@ -102,7 +110,14 @@ const TaskForm = forwardRef(function TaskForm(
                 name: event.target.value,
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
+          <label
+            htmlFor="project"
+            className="text-sm font-medium text-gray-700"
+          >
+            Project
+          </label>
           <select
             name="projectId"
             id="project"
@@ -114,6 +129,7 @@ const TaskForm = forwardRef(function TaskForm(
                 projectId: Number(event.target.value),
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           >
             <option value="">Select a project</option>
             {projectList.map((project) => (
@@ -122,6 +138,9 @@ const TaskForm = forwardRef(function TaskForm(
               </option>
             ))}
           </select>
+          <label htmlFor="status" className="text-sm font-medium text-gray-700">
+            Status
+          </label>
           <select
             name="status"
             id="status"
@@ -133,13 +152,19 @@ const TaskForm = forwardRef(function TaskForm(
                 status: event.target.value,
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           >
             <option value="">Select a status</option>
             <option value="Completed">Completed</option>
             <option value="In Progress">In Progress</option>
             <option value="To Do">To Do</option>
           </select>
-          <label htmlFor="deadline">Deadline</label>
+          <label
+            htmlFor="deadline"
+            className="text-sm font-medium text-gray-700"
+          >
+            Deadline
+          </label>
           <input
             required
             type="date"
@@ -153,13 +178,23 @@ const TaskForm = forwardRef(function TaskForm(
                 deadline: event.target.value,
               }))
             }
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           />
-          <button type="button" onClick={() => dialog.current.close()}>
-            Cancel
-          </button>
-          <button type="submit">
-            {selectedTask ? "Edit Task" : "Add Task"}
-          </button>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => dialog.current.close()}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+              {selectedTask ? "Edit Task" : "Add Task"}
+            </button>
+          </div>
         </form>
       </dialog>
     </>
