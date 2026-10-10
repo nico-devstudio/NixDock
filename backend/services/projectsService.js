@@ -1,0 +1,94 @@
+import pool from "../db/database.js";
+
+const getProjects = async (userId) => {
+    const result = await pool.query(`
+  SELECT projects.id AS project_id,
+         projects.name AS project_name,
+         clients.id AS client_id,
+         clients.name AS client_name
+  FROM projects
+  JOIN clients
+  ON projects.client_id = clients.id
+  WHERE projects.user_id = $1
+`, [userId]);
+
+    return result.rows;
+};
+
+const getProjectById = async (id, userId) => {
+    const result = await pool.query(`
+  SELECT projects.id AS project_id,
+         projects.name AS project_name,
+         clients.id AS client_id,
+         clients.name AS client_name
+  FROM projects
+  JOIN clients
+  ON projects.client_id = clients.id
+  WHERE projects.id = $1
+  AND projects.user_id = $2
+`, [id, userId]);
+
+    return result.rows[0];
+};
+
+const createProject = async (name, clientId, userId) => {
+    const clientResult = await pool.query(
+        `SELECT id
+     FROM clients
+     WHERE id = $1 AND user_id = $2`,
+        [clientId, userId]
+    );
+
+    if (clientResult.rows.length === 0) {
+        const error = new Error("Client not found");
+        error.status = 404;
+        throw error;
+    }
+
+    const result = await pool.query(
+        `INSERT INTO projects (name, client_id, user_id)
+     VALUES ($1, $2, $3)
+     RETURNING *`,
+        [name, clientId, userId]
+    );
+
+    return result.rows[0];
+};
+
+const updateProject = async (id, name, clientId, userId) => {
+    const clientResult = await pool.query(
+        `SELECT id
+     FROM clients
+     WHERE id = $1 AND user_id = $2`,
+        [clientId, userId]
+    );
+
+    if (clientResult.rows.length === 0) {
+        const error = new Error("Client not found");
+        error.status = 404;
+        throw error;
+    }
+
+    const result = await pool.query(
+        `UPDATE projects
+     SET name = $1, client_id = $2
+     WHERE id = $3 AND user_id = $4
+     RETURNING *`,
+        [name, clientId, id, userId]
+    );
+
+    return result.rows[0];
+};
+const deleteProject = async (id, userId) => {
+    const result = await pool.query(
+        `DELETE FROM projects
+     WHERE id = $1 AND user_id = $2
+     RETURNING *`,
+        [id, userId]
+    );
+
+    return result.rows[0];
+};
+
+
+export { getProjects, getProjectById, createProject, updateProject, deleteProject };

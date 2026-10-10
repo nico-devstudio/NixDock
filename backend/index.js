@@ -1,0 +1,54 @@
+import "dotenv/config";
+import express from "express";
+import userRoutes from "./routes/users.js";
+import pool from "./db/database.js";
+import projectRoutes from "./routes/projects.js";
+import clientRoutes from "./routes/clients.js";
+import authRoutes from "./routes/auth.js";
+
+if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is missing from .env");
+}
+
+pool.query("SELECT NOW()")
+    .then(result => {
+        console.log(result.rows);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+const app = express();
+
+app.use(express.json());
+
+app.use("/users", userRoutes);
+app.use("/projects", projectRoutes);
+app.use("/clients", clientRoutes);
+app.use("/auth", authRoutes);
+
+app.use((error, req, res, next) => {
+    console.error(error);
+
+    if (error.code === "23505") {
+        return res.status(409).json({
+            message: "Email already exists"
+        });
+    }
+
+    if (error.code === "23503") {
+        return res.status(409).json({
+            message: "Cannot delete client because it has associated projects"
+        });
+    }
+
+    const status = error.status || 500;
+
+    res.status(status).json({
+        message: error.message || "Internal server error"
+    });
+});
+
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
