@@ -5,6 +5,7 @@ import pool from "./db/database.js";
 import projectRoutes from "./routes/projects.js";
 import clientRoutes from "./routes/clients.js";
 import authRoutes from "./routes/auth.js";
+import cors from "cors";
 
 if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is missing from .env");
@@ -20,6 +21,12 @@ pool.query("SELECT NOW()")
 
 const app = express();
 
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+    }),
+);
+
 app.use(express.json());
 
 app.use("/users", userRoutes);
@@ -27,7 +34,7 @@ app.use("/projects", projectRoutes);
 app.use("/clients", clientRoutes);
 app.use("/auth", authRoutes);
 
-app.use((error, req, res, next) => {
+app.use((error, _req, res, _next) => {
     console.error(error);
 
     if (error.code === "23505") {

@@ -11,55 +11,71 @@ import Task from "./pages/Task";
 import Deliverable from "./pages/Deliverable";
 import Deliverables from "./pages/Deliverables";
 import NotFound from "./components/NotFound";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <RootLayout />,
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: "settings",
-        element: <Settings />,
-      },
-      {
-        path: "projects",
-        element: <Projects />,
-      },
-      {
-        path: "projects/:id",
-        element: <Project />,
-      },
-      {
-        path: "clients",
-        element: <Clients />,
-      },
-      {
-        path: "clients/:id",
-        element: <Client />,
-      },
-      {
-        path: "tasks",
-        element: <Tasks />,
-      },
-      {
-        path: "tasks/:id",
-        element: <Task />,
-      },
-      {
-        path: "deliverables",
-        element: <Deliverables />,
-      },
-      {
-        path: "deliverables/:id",
-        element: <Deliverable />,
-      },
-      {
-        path: "*",
-        element: <NotFound resource="Page" />,
+        path: "/",
+        element: <RootLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
+          },
+          {
+            path: "projects",
+            element: <Projects />,
+          },
+          {
+            path: "projects/:id",
+            element: <Project />,
+          },
+          {
+            path: "clients",
+            element: <Clients />,
+          },
+          {
+            path: "clients/:id",
+            element: <Client />,
+          },
+          {
+            path: "tasks",
+            element: <Tasks />,
+          },
+          {
+            path: "tasks/:id",
+            element: <Task />,
+          },
+          {
+            path: "deliverables",
+            element: <Deliverables />,
+          },
+          {
+            path: "deliverables/:id",
+            element: <Deliverable />,
+          },
+          {
+            path: "*",
+            element: <NotFound resource="Page" />,
+          },
+        ],
       },
     ],
   },
