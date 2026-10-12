@@ -1,112 +1,65 @@
-import { findUserById, createUser, updateUser, deleteUser } from "../services/usersService.js";
+import {
+    findUserById,
+    updateUser,
+    deleteUser,
+} from "../services/usersService.js";
 
-const getUser = async (req, res) => {
+import AppError from "../utils/AppError.js";
+
+const getUser = async (req, res, next) => {
     try {
-        const id = Number(req.params.id);
-        const user = await findUserById(id);
+        const user = await findUserById(req.userId);
 
         if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
+            throw new AppError("User not found", 404);
         }
 
         res.json(user);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        next(error);
     }
 };
 
-const createUserController = async (req, res) => {
+const updateUserController = async (req, res, next) => {
     try {
-        if (!req.body.name) {
-            return res.status(400).json({
-                message: "Name is required"
-            });
+        const { name, age } = req.body;
+
+        if (typeof name !== "string" || !name.trim()) {
+            throw new AppError("Name must be a non-empty string", 400);
         }
 
-        if (req.body.age === undefined) {
-            return res.status(400).json({
-                message: "Age is required"
-            });
-        }
-
-        if (typeof req.body.age !== "number") {
-            return res.status(400).json({
-                message: "Age must be a number"
-            });
-        }
-
-        const newUser = await createUser(req.body.name, req.body.age);
-
-        return res.status(201).json(newUser);
-    }
-
-    catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-const updateUserController = async (req, res) => {
-    try {
-        const id = Number(req.params.id);
-
-        if (!req.body.name) {
-            return res.status(400).json({
-                message: "Name is required"
-            });
-        }
-
-        if (req.body.age === undefined) {
-            return res.status(400).json({
-                message: "Age is required"
-            });
-        }
-
-        if (typeof req.body.age !== "number") {
-            return res.status(400).json({
-                message: "Age must be a number"
-            });
+        if (typeof age !== "number" || !Number.isInteger(age) || age <= 0) {
+            throw new AppError("Age must be a positive whole number", 400);
         }
 
         const user = await updateUser(
-            id,
-            req.body.name,
-            req.body.age
+            req.userId,
+            name.trim(),
+            age
         );
 
         if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
+            throw new AppError("User not found", 404);
         }
 
-        return res.json(user);
+        res.json(user);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        next(error);
     }
 };
 
-const deleteUserController = async (req, res) => {
+const deleteUserController = async (req, res, next) => {
     try {
-        const id = Number(req.params.id);
-        const deleted = await deleteUser(id);
-        if (!deleted) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-        return res.json({
-            message: "User deleted successfully"
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+        const deletedUser = await deleteUser(req.userId);
 
+        if (!deletedUser) {
+            throw new AppError("User not found", 404);
+        }
+
+        res.json({ message: "User deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
 };
 
-export { getUser, createUserController, updateUserController, deleteUserController };
+export { getUser, updateUserController, deleteUserController };

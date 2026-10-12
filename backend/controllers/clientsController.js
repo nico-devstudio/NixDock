@@ -22,6 +22,10 @@ const getClientByIdController = async (req, res, next) => {
     try {
         const id = Number(req.params.id);
 
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new AppError("Invalid client ID", 400);
+        }
+
         const client = await getClientById(id, req.userId);
 
         if (!client) {
@@ -53,6 +57,10 @@ const createClientController = async (req, res, next) => {
 const updateClientController = async (req, res, next) => {
     try {
         const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new AppError("Invalid client ID", 400);
+        }
         const { name } = req.body;
 
         if (!name) {
@@ -71,9 +79,13 @@ const updateClientController = async (req, res, next) => {
     }
 };
 
-const deleteClientController = async (req, res, next,) => {
+const deleteClientController = async (req, res, next) => {
     try {
         const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new AppError("Invalid client ID", 400);
+        }
 
         const client = await deleteClient(id, req.userId);
 

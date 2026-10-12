@@ -1,4 +1,5 @@
 import { getProjects, getProjectById, createProject, updateProject, deleteProject } from "../services/projectsService.js";
+import AppError from "../utils/AppError.js";
 
 const getProjectsController = async (req, res, next) => {
     try {
@@ -31,27 +32,19 @@ const createProjectController = async (req, res, next) => {
     try {
         const { name, clientId } = req.body;
 
-        if (!name) {
-            return res.status(400).json({
-                message: "Name is required"
-            });
+        if (typeof name !== "string" || !name.trim()) {
+            throw new AppError("Name is required", 400);
         }
 
-        if (!clientId) {
-            return res.status(400).json({
-                message: "Client ID is required"
-            });
+        if (!Number.isInteger(clientId) || clientId <= 0) {
+            throw new AppError("A valid Client ID is required", 400);
         }
 
-        const project = await createProject(name, clientId, req.userId);
+        const project = await createProject(name.trim(), clientId, req.userId);
 
         res.status(201).json(project);
     } catch (error) {
-        console.error(error);
-
-        res.status(error.status || 500).json({
-            message: error.message || "Internal server error"
-        });
+        next(error);
     }
 }
 

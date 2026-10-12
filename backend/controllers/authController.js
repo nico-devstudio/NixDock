@@ -13,6 +13,8 @@ const registerController = async (req, res, next) => {
             throw new AppError("Name must be a non-empty string", 400);
         }
 
+        const normalizedName = name.trim();
+
         if (typeof age !== "number" || !Number.isInteger(age) || age <= 0) {
             throw new AppError("Age must be a positive whole number", 400);
         }
@@ -31,7 +33,7 @@ const registerController = async (req, res, next) => {
 
 
         const user = await registerUser(
-            name,
+            normalizedName,
             age,
             normalizedEmail,
             password
