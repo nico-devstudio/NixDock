@@ -40,13 +40,13 @@ const getClientByIdController = async (req, res, next) => {
 
 const createClientController = async (req, res, next) => {
     try {
-        const { name } = req.body;
+        const { name, email } = req.body;
 
         if (!name) {
             throw new AppError("Name is required", 400)
         }
 
-        const client = await createClient(name, req.userId);
+        const client = await createClient(name, email, req.userId);
 
         res.status(201).json(client);
     } catch (error) {
@@ -61,13 +61,13 @@ const updateClientController = async (req, res, next) => {
         if (!Number.isInteger(id) || id <= 0) {
             throw new AppError("Invalid client ID", 400);
         }
-        const { name } = req.body;
+        const { name, email } = req.body;
 
         if (!name) {
             throw new AppError("Name is required", 400)
         }
 
-        const client = await updateClient(id, name, req.userId);
+        const client = await updateClient(id, name, email, req.userId);
 
         if (!client) {
             throw new AppError("Client not found", 404);
@@ -88,6 +88,13 @@ const deleteClientController = async (req, res, next) => {
         }
 
         const client = await deleteClient(id, req.userId);
+
+        if (client?.hasProjects) {
+            throw new AppError(
+                "Cannot delete this client because they still have projects. Reassign or delete those projects first.",
+                409,
+            );
+        }
 
         if (!client) {
             throw new AppError("Client not found", 404);

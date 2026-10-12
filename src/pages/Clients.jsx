@@ -2,6 +2,7 @@ import { Plus, UsersRound } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
 import { useRef } from "react";
 import ClientForm from "../components/ClientForm";
+import { apiRequest } from "../api";
 
 export default function Clients() {
   const cardsStyle =
@@ -28,33 +29,24 @@ export default function Clients() {
     clientForm.current.open();
   }
 
-  function handleDeleteClient(id, name) {
+  async function handleDeleteClient(id, name) {
     const confirmed = confirm(
-      `Delete ${name}? This will also permanently delete all projects, tasks, and deliverables associated with this client.`,
+      `Are you sure you want to delete ${name}?\n\nClients with existing projects cannot be deleted. This action cannot be undone.`,
     );
 
-    if (confirmed) {
-      const clientProjects = projectList.filter(
-        (project) => project.clientId === id,
+    if (!confirmed) return;
+
+    try {
+      await apiRequest(`/clients/${id}`, {
+        method: "DELETE",
+      });
+
+      setClientList((prevList) =>
+        prevList.filter((client) => client.id !== id),
       );
-      setClientList((prevList) => prevList.filter((list) => list.id !== id));
-      setTaskList((prevList) =>
-        prevList.filter(
-          (task) =>
-            !clientProjects.some((project) => project.id === task.projectId),
-        ),
-      );
-      setDeliverableList((prevList) =>
-        prevList.filter(
-          (deliverable) =>
-            !clientProjects.some(
-              (project) => project.id === deliverable.projectId,
-            ),
-        ),
-      );
-      setProjectList((prevList) =>
-        prevList.filter((project) => project.clientId !== id),
-      );
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+      alert(error.message || "Failed to delete client.");
     }
   }
 

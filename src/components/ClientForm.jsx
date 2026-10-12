@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { apiRequest } from "../api";
 
 const ClientForm = forwardRef(function ClientForm(
   { setClientList, clientList },
@@ -15,32 +16,50 @@ const ClientForm = forwardRef(function ClientForm(
     },
   }));
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const fd = new FormData(event.target);
     const data = Object.fromEntries(fd.entries());
-    selectedClient
-      ? setClientList((prevList) => {
-          return prevList.map((list) => {
-            if (list.id === selectedClient.id) {
-              const updatedClient = {
-                ...data,
-                id: selectedClient.id,
-              };
-              return updatedClient;
-            }
-            return list;
-          });
-        })
-      : setClientList((prevList) => {
-          const newdata = { ...data, id: Date.now() };
-          const updatedClient = [...prevList, newdata];
-          return updatedClient;
+
+    const clientData = {
+      name: data.name.trim(),
+      email: data.email.trim(),
+    };
+
+    try {
+      if (selectedClient) {
+        const updatedClient = await apiRequest(
+          `/clients/${selectedClient.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(clientData),
+          },
+        );
+
+        setClientList((prevList) =>
+          prevList.map((client) =>
+            client.id === selectedClient.id
+              ? { ...client, ...updatedClient }
+              : client,
+          ),
+        );
+      } else {
+        const newClient = await apiRequest("/clients", {
+          method: "POST",
+          body: JSON.stringify(clientData),
         });
 
-    dialog.current.close();
-    event.target.reset();
+        setClientList((prevList) => [...prevList, newClient]);
+      }
+
+      dialog.current.close();
+      event.target.reset();
+      setSelectedClient(undefined);
+    } catch (error) {
+      console.error("Failed to save client:", error);
+      alert(error.message || "Failed to save client.");
+    }
   }
 
   return (
