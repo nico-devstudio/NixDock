@@ -2,28 +2,31 @@ import pool from "../db/database.js";
 
 const getProjects = async (userId) => {
     const result = await pool.query(`
-  SELECT projects.id AS project_id,
-         projects.name AS project_name,
-         clients.id AS client_id,
-         clients.name AS client_name
+  SELECT
+    projects.id,
+    projects.name,
+    projects.client_id AS "clientId",
+    clients.name AS "clientName",
+    projects.status,
+    projects.deadline
   FROM projects
-  JOIN clients
-  ON projects.client_id = clients.id
+  JOIN clients ON projects.client_id = clients.id
   WHERE projects.user_id = $1
 `, [userId]);
-
     return result.rows;
 };
 
 const getProjectById = async (id, userId) => {
     const result = await pool.query(`
-  SELECT projects.id AS project_id,
-         projects.name AS project_name,
-         clients.id AS client_id,
-         clients.name AS client_name
+SELECT
+    projects.id,
+    projects.name,
+    projects.client_id AS "clientId",
+    clients.name AS "clientName",
+    projects.status,
+    projects.deadline
   FROM projects
-  JOIN clients
-  ON projects.client_id = clients.id
+  JOIN clients ON projects.client_id = clients.id
   WHERE projects.id = $1
   AND projects.user_id = $2
 `, [id, userId]);
@@ -31,7 +34,7 @@ const getProjectById = async (id, userId) => {
     return result.rows[0];
 };
 
-const createProject = async (name, clientId, userId) => {
+const createProject = async (name, clientId, status, deadline, userId) => {
     const clientResult = await pool.query(
         `SELECT id
      FROM clients
@@ -46,16 +49,16 @@ const createProject = async (name, clientId, userId) => {
     }
 
     const result = await pool.query(
-        `INSERT INTO projects (name, client_id, user_id)
-     VALUES ($1, $2, $3)
-     RETURNING *`,
-        [name, clientId, userId]
+        `INSERT INTO projects (name, client_id, status, deadline, user_id)
+   VALUES ($1, $2, $3, $4, $5)
+   RETURNING *`,
+        [name, clientId, status, deadline, userId]
     );
 
     return result.rows[0];
 };
 
-const updateProject = async (id, name, clientId, userId) => {
+const updateProject = async (id, name, clientId, status, deadline, userId) => {
     const clientResult = await pool.query(
         `SELECT id
      FROM clients
@@ -71,10 +74,13 @@ const updateProject = async (id, name, clientId, userId) => {
 
     const result = await pool.query(
         `UPDATE projects
-     SET name = $1, client_id = $2
-     WHERE id = $3 AND user_id = $4
-     RETURNING *`,
-        [name, clientId, id, userId]
+    SET name = $1,
+    client_id = $2,
+    status = $3,
+    deadline = $4
+WHERE id = $5 AND user_id = $6
+RETURNING *`,
+        [name, clientId, status, deadline, id, userId]
     );
 
     return result.rows[0];

@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { apiRequest } from "../api";
 
 const ProjectForm = forwardRef(function ProjectForm(
   { clientList, setProjectList, projectList },
@@ -42,30 +43,59 @@ const ProjectForm = forwardRef(function ProjectForm(
     },
   }));
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    selectedProject
-      ? setProjectList((prevList) =>
+    const projectData = {
+      name: formData.name.trim(),
+      clientId: Number(formData.clientId),
+      status: formData.status,
+      deadline: formData.deadline,
+    };
+
+    try {
+      if (selectedProject) {
+        const updatedProject = await apiRequest(
+          `/projects/${selectedProject.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(projectData),
+          },
+        );
+
+        setProjectList((prevList) =>
           prevList.map((project) =>
             project.id === selectedProject.id
               ? {
-                  ...formData,
-                  id: selectedProject.id,
-                  clientId: Number(formData.clientId),
+                  ...project,
+                  ...updatedProject,
+                  clientId: updatedProject.client_id ?? updatedProject.clientId,
+                  deadline: projectData.deadline,
                 }
               : project,
           ),
-        )
-      : setProjectList((prevList) => [
+        );
+      } else {
+        const newProject = await apiRequest("/projects", {
+          method: "POST",
+          body: JSON.stringify(projectData),
+        });
+
+        setProjectList((prevList) => [
           ...prevList,
           {
-            ...formData,
-            id: Date.now(),
-            clientId: Number(formData.clientId),
+            ...newProject,
+            clientId: newProject.client_id ?? newProject.clientId,
+            deadline: projectData.deadline,
           },
         ]);
-    dialog.current.close();
+      }
+
+      dialog.current.close();
+    } catch (error) {
+      console.error("Failed to save project:", error);
+      alert(error.message || "Failed to save project.");
+    }
   }
 
   return (

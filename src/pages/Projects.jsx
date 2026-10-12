@@ -2,6 +2,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, Plus } from "lucide-react";
 import ProjectForm from "../components/ProjectForm";
 import { useRef } from "react";
+import { apiRequest } from "../api";
 
 export default function Projects() {
   const projStatus = "text-xs font-medium px-2.5 py-1 rounded-full";
@@ -27,17 +28,30 @@ export default function Projects() {
     projectForm.current.open({});
   }
 
-  function handleDeleteProject(id, name) {
+  async function handleDeleteProject(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    if (confirmed) {
-      setProjectList((prevList) => prevList.filter((list) => list.id !== id));
+    if (!confirmed) return;
+
+    try {
+      await apiRequest(`/projects/${id}`, {
+        method: "DELETE",
+      });
+
+      setProjectList((prevList) =>
+        prevList.filter((project) => project.id !== id),
+      );
+
       setTaskList((prevList) =>
         prevList.filter((task) => task.projectId !== id),
       );
+
       setDeliverableList((prevList) =>
         prevList.filter((deliverable) => deliverable.projectId !== id),
       );
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+      alert(error.message || "Failed to delete project.");
     }
   }
 
