@@ -42,13 +42,24 @@ export default function Dashboard() {
     })
     .sort((a, b) => b.progress - a.progress)
     .slice(0, 3);
+  console.log(
+    "Task deadlines:",
+    taskList.map((task) => ({
+      id: task.id,
+      name: task.name,
+      deadline: task.deadline,
+    })),
+  );
+
   const upcomingTasks = taskList
     .filter(
       (task) =>
         task.status !== "Completed" &&
-        new Date(task.deadline) >= new Date().setHours(0, 0, 0, 0),
+        task.deadline?.slice(0, 10) >= new Date().toLocaleDateString("en-CA"),
     )
-    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+    .sort((a, b) =>
+      a.deadline.slice(0, 10).localeCompare(b.deadline.slice(0, 10)),
+    )
     .slice(0, 3);
 
   const recentDeliverables = [...deliverableList]
@@ -223,7 +234,9 @@ export default function Dashboard() {
                   >
                     <p>{deliverable.name}</p>
                     <p className={`${mutedText} shrink-0`}>
-                      {new Date(deliverable.date).toLocaleDateString("en-US", {
+                      {new Date(
+                        `${deliverable.date}T12:00:00`,
+                      ).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
