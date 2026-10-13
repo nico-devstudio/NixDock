@@ -49,7 +49,7 @@ const TaskForm = forwardRef(function TaskForm(
           name: task.name,
           projectId: task.projectId,
           status: task.status,
-          deadline: task.deadline,
+          deadline: task.deadline.slice(0, 10),
         });
       } else {
         setSelectedTask(undefined);
