@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { apiRequest } from "../api";
 
 const DeliverableForm = forwardRef(function DeliverableForm(
   { setDeliverableList, deliverableList, projectList },
@@ -61,31 +62,45 @@ const DeliverableForm = forwardRef(function DeliverableForm(
     },
   }));
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    selectedDeliverable
-      ? setDeliverableList((prevList) =>
+    const deliverableData = {
+      ...formData,
+      projectId: Number(formData.projectId),
+    };
+
+    try {
+      if (selectedDeliverable) {
+        const updatedDeliverable = await apiRequest(
+          `/deliverables/${selectedDeliverable.id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(deliverableData),
+          },
+        );
+
+        setDeliverableList((prevList) =>
           prevList.map((deliverable) =>
             deliverable.id === selectedDeliverable.id
-              ? {
-                  ...formData,
-                  id: selectedDeliverable.id,
-                  projectId: Number(formData.projectId),
-                }
+              ? updatedDeliverable
               : deliverable,
           ),
-        )
-      : setDeliverableList((prevList) => [
-          ...prevList,
-          {
-            ...formData,
-            id: Date.now(),
-            projectId: Number(formData.projectId),
-          },
-        ]);
+        );
+      } else {
+        const newDeliverable = await apiRequest("/deliverables", {
+          method: "POST",
+          body: JSON.stringify(deliverableData),
+        });
 
-    dialog.current.close();
+        setDeliverableList((prevList) => [...prevList, newDeliverable]);
+      }
+
+      dialog.current.close();
+    } catch (error) {
+      console.error("Failed to save deliverable:", error);
+      alert(error.message);
+    }
   }
 
   return (

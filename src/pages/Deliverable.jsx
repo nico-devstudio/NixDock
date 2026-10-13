@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import DeliverableForm from "../components/DeliverableForm";
 import NotFound from "../components/NotFound";
+import { apiRequest } from "../api";
 
 export default function Deliverable() {
   const { projectList, clientList, deliverableList, setDeliverableList } =
@@ -28,14 +29,24 @@ export default function Deliverable() {
   const client =
     project && clientList.find((client) => client.id === project.clientId);
 
-  function handleDeleteDeliverable(id, name) {
+  async function handleDeleteDeliverable(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    if (confirmed) {
+    if (!confirmed) return;
+
+    try {
+      await apiRequest(`/deliverables/${id}`, {
+        method: "DELETE",
+      });
+
       setDeliverableList((prevList) =>
-        prevList.filter((list) => list.id !== id),
+        prevList.filter((deliverable) => deliverable.id !== id),
       );
+
       navigate("/deliverables");
+    } catch (error) {
+      console.error("Failed to delete deliverable:", error);
+      alert(error.message);
     }
   }
 
