@@ -1,5 +1,6 @@
 import { Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, ListChecks, PackageCheck } from "lucide-react";
+import { apiRequest } from "../api";
 
 export default function Dashboard() {
   const { clientList, projectList, deliverableList, taskList, setTaskList } =
@@ -54,13 +55,29 @@ export default function Dashboard() {
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
 
-  function handleTaskComplete(taskId) {
-    setTaskList((prevList) => {
-      const updatedList = prevList.map((task) =>
-        task.id === taskId ? { ...task, status: "Completed" } : task,
+  async function handleTaskComplete(taskId) {
+    const task = taskList.find((task) => task.id === taskId);
+
+    if (!task) return;
+
+    try {
+      const updatedTask = await apiRequest(`/tasks/${taskId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: task.name,
+          projectId: task.projectId,
+          status: "Completed",
+          deadline: task.deadline,
+        }),
+      });
+
+      setTaskList((prevList) =>
+        prevList.map((task) => (task.id === taskId ? updatedTask : task)),
       );
-      return updatedList;
-    });
+    } catch (error) {
+      console.error("Failed to complete task:", error);
+      alert(error.message);
+    }
   }
 
   return (
