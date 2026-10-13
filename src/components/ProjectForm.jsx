@@ -26,7 +26,7 @@ const ProjectForm = forwardRef(function ProjectForm(
           name: project.name,
           clientId: project.clientId,
           status: project.status,
-          deadline: project.deadline,
+          deadline: project.deadline ? project.deadline.slice(0, 10) : "",
         });
       } else {
         setSelectedProject(undefined);
@@ -50,7 +50,7 @@ const ProjectForm = forwardRef(function ProjectForm(
       name: formData.name.trim(),
       clientId: Number(formData.clientId),
       status: formData.status,
-      deadline: formData.deadline,
+      deadline: formData.deadline || null,
     };
 
     try {
@@ -177,7 +177,6 @@ const ProjectForm = forwardRef(function ProjectForm(
           </label>
           <input
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
-            required
             type="date"
             min={minDate}
             id="deadline"

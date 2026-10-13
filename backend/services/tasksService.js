@@ -39,15 +39,28 @@ const getTaskById = async (id, userId) => {
 
 const createTask = async (name, projectId, status, deadline, userId) => {
     const projectResult = await pool.query(
-        `SELECT id, name
+        `SELECT id, name, deadline
 FROM projects
-     WHERE id = $1 AND user_id = $2`,
+WHERE id = $1 AND user_id = $2`,
         [projectId, userId],
     );
 
     if (projectResult.rows.length === 0) {
         const error = new Error("Project not found");
         error.status = 404;
+        throw error;
+    }
+
+    const projectDeadline = projectResult.rows[0].deadline;
+
+    if (
+        projectDeadline &&
+        deadline > new Date(projectDeadline).toISOString().slice(0, 10)
+    ) {
+        const error = new Error(
+            "Task deadline cannot be later than the project deadline",
+        );
+        error.status = 400;
         throw error;
     }
 
@@ -66,15 +79,28 @@ FROM projects
 
 const updateTask = async (id, name, projectId, status, deadline, userId) => {
     const projectResult = await pool.query(
-        `SELECT id, name
-     FROM projects
-     WHERE id = $1 AND user_id = $2`,
+        `SELECT id, name, deadline
+FROM projects
+WHERE id = $1 AND user_id = $2`,
         [projectId, userId],
     );
 
     if (projectResult.rows.length === 0) {
         const error = new Error("Project not found");
         error.status = 404;
+        throw error;
+    }
+
+    const projectDeadline = projectResult.rows[0].deadline;
+
+    if (
+        projectDeadline &&
+        deadline > new Date(projectDeadline).toISOString().slice(0, 10)
+    ) {
+        const error = new Error(
+            "Task deadline cannot be later than the project deadline",
+        );
+        error.status = 400;
         throw error;
     }
 

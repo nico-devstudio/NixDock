@@ -93,11 +93,13 @@ export default function Project() {
           </Link>
           <p className="text-xs text-gray-500">
             Deadline:{" "}
-            {new Date(project.deadline).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
+            {project.deadline
+              ? new Date(project.deadline).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "No deadline set"}
           </p>
           <div className="flex gap-8">
             <p
@@ -140,11 +142,13 @@ export default function Project() {
               <div className={projDetails}>
                 <p className={projDetailLabel}>Deadline</p>
                 <p className="text-gray-900">
-                  {new Date(project.deadline).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {project.deadline
+                    ? new Date(project.deadline).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "No deadline set"}
                 </p>
               </div>
               <div className="flex gap-2 relative">

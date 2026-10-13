@@ -46,22 +46,28 @@ const createProjectController = async (req, res, next) => {
             throw new AppError("A valid project status is required", 400);
         }
 
-        const parsedDeadline = new Date(`${deadline}T00:00:00.000Z`);
+        let parsedDeadline = null;
 
-        if (
-            typeof deadline !== "string" ||
-            !/^\d{4}-\d{2}-\d{2}$/.test(deadline) ||
-            Number.isNaN(parsedDeadline.getTime()) ||
-            parsedDeadline.toISOString().slice(0, 10) !== deadline
-        ) {
-            throw new AppError("A valid deadline is required (YYYY-MM-DD)", 400);
+        if (deadline) {
+            const parsedDate = new Date(`${deadline}T00:00:00.000Z`);
+
+            if (
+                typeof deadline !== "string" ||
+                !/^\d{4}-\d{2}-\d{2}$/.test(deadline) ||
+                Number.isNaN(parsedDate.getTime()) ||
+                parsedDate.toISOString().slice(0, 10) !== deadline
+            ) {
+                throw new AppError("A valid deadline is required (YYYY-MM-DD)", 400);
+            }
+
+            parsedDeadline = deadline;
         }
 
         const project = await createProject(
             name.trim(),
             clientId,
             status,
-            deadline,
+            parsedDeadline,
             req.userId,
         );
 
@@ -95,15 +101,21 @@ const updateProjectController = async (req, res, next) => {
             throw new AppError("A valid project status is required", 400);
         }
 
-        const parsedDeadline = new Date(`${deadline}T00:00:00.000Z`);
+        let parsedDeadline = null;
 
-        if (
-            typeof deadline !== "string" ||
-            !/^\d{4}-\d{2}-\d{2}$/.test(deadline) ||
-            Number.isNaN(parsedDeadline.getTime()) ||
-            parsedDeadline.toISOString().slice(0, 10) !== deadline
-        ) {
-            throw new AppError("A valid deadline is required (YYYY-MM-DD)", 400);
+        if (deadline) {
+            const parsedDate = new Date(`${deadline}T00:00:00.000Z`);
+
+            if (
+                typeof deadline !== "string" ||
+                !/^\d{4}-\d{2}-\d{2}$/.test(deadline) ||
+                Number.isNaN(parsedDate.getTime()) ||
+                parsedDate.toISOString().slice(0, 10) !== deadline
+            ) {
+                throw new AppError("A valid deadline is required (YYYY-MM-DD)", 400);
+            }
+
+            parsedDeadline = deadline;
         }
 
         const project = await updateProject(
@@ -111,7 +123,7 @@ const updateProjectController = async (req, res, next) => {
             name.trim(),
             clientId,
             status,
-            deadline,
+            parsedDeadline,
             req.userId,
         );
 

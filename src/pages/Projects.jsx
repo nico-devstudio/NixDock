@@ -24,6 +24,13 @@ export default function Projects() {
   } = useOutletContext();
   const projectForm = useRef();
 
+  console.log(
+    projectList.map((project) => ({
+      name: project.name,
+      deadline: project.deadline,
+    })),
+  );
+
   function handleAddProject() {
     projectForm.current.open({});
   }
@@ -135,11 +142,16 @@ export default function Projects() {
                       {project.status}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {new Date(project.deadline).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {project.deadline
+                        ? new Date(project.deadline).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )
+                        : "No deadline set"}
                     </p>
                   </div>
                 </Link>

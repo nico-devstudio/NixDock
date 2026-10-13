@@ -72,6 +72,25 @@ const updateProject = async (id, name, clientId, status, deadline, userId) => {
         throw error;
     }
 
+    if (deadline) {
+        const taskResult = await pool.query(
+            `SELECT id, name, deadline
+     FROM tasks
+     WHERE project_id = $1
+       AND user_id = $2
+       AND deadline > $3`,
+            [id, userId, deadline],
+        );
+
+        if (taskResult.rows.length > 0) {
+            const error = new Error(
+                "Project deadline cannot be earlier than an existing task deadline",
+            );
+            error.status = 400;
+            throw error;
+        }
+    }
+
     const result = await pool.query(
         `UPDATE projects
     SET name = $1,
