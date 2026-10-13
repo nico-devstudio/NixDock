@@ -2,6 +2,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import { ListChecks, Plus } from "lucide-react";
 import TaskForm from "../components/TaskForm";
 import { useRef } from "react";
+import { apiRequest } from "../api";
 
 export default function Tasks() {
   const status = "text-xs font-medium px-2.5 py-1 rounded-full";
@@ -18,11 +19,20 @@ export default function Tasks() {
     taskForm.current.open({});
   }
 
-  function handleDeleteTask(id, name) {
+  async function handleDeleteTask(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    if (confirmed) {
-      setTaskList((prevList) => prevList.filter((list) => list.id !== id));
+    if (!confirmed) return;
+
+    try {
+      await apiRequest(`/tasks/${id}`, {
+        method: "DELETE",
+      });
+
+      setTaskList((prevList) => prevList.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+      alert(error.message);
     }
   }
 

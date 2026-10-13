@@ -16,14 +16,7 @@ export default function Clients() {
   const editButt =
     "px-4 py-2 cursor-pointer text-base self-center rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
   const clientForm = useRef();
-  const {
-    clientList,
-    setClientList,
-    setProjectList,
-    setTaskList,
-    setDeliverableList,
-    projectList,
-  } = useOutletContext();
+  const { clientList, setClientList, projectList } = useOutletContext();
 
   function handleAddClient() {
     clientForm.current.open();

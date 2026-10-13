@@ -5,6 +5,7 @@ import pool from "./db/database.js";
 import projectRoutes from "./routes/projects.js";
 import clientRoutes from "./routes/clients.js";
 import authRoutes from "./routes/auth.js";
+import taskRoutes from "./routes/tasksRoutes.js";
 import cors from "cors";
 
 if (!process.env.JWT_SECRET) {
@@ -33,6 +34,7 @@ app.use("/users", userRoutes);
 app.use("/projects", projectRoutes);
 app.use("/clients", clientRoutes);
 app.use("/auth", authRoutes);
+app.use("/tasks", taskRoutes);
 
 app.use((error, _req, res, _next) => {
     console.error(error);

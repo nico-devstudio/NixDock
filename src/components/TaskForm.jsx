@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { apiRequest } from "../api";
 
 const TaskForm = forwardRef(function TaskForm(
   { setTaskList, taskList, projectList },
@@ -65,31 +66,40 @@ const TaskForm = forwardRef(function TaskForm(
     },
   }));
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    selectedTask
-      ? setTaskList((prevList) =>
-          prevList.map((task) =>
-            task.id === selectedTask.id
-              ? {
-                  ...formData,
-                  id: selectedTask.id,
-                  projectId: Number(formData.projectId),
-                }
-              : task,
-          ),
-        )
-      : setTaskList((prevList) => [
-          ...prevList,
-          {
-            ...formData,
-            id: Date.now(),
-            projectId: Number(formData.projectId),
-          },
-        ]);
+    const taskData = {
+      ...formData,
+      projectId: Number(formData.projectId),
+    };
 
-    dialog.current.close();
+    try {
+      if (selectedTask) {
+        const updatedTask = await apiRequest(`/tasks/${selectedTask.id}`, {
+          method: "PUT",
+          body: JSON.stringify(taskData),
+        });
+
+        setTaskList((prevList) =>
+          prevList.map((task) =>
+            task.id === selectedTask.id ? updatedTask : task,
+          ),
+        );
+      } else {
+        const newTask = await apiRequest("/tasks", {
+          method: "POST",
+          body: JSON.stringify(taskData),
+        });
+
+        setTaskList((prevList) => [...prevList, newTask]);
+      }
+
+      dialog.current.close();
+    } catch (error) {
+      console.error("Failed to save task:", error);
+      alert(error.message);
+    }
   }
 
   return (

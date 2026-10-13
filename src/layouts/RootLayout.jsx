@@ -2,17 +2,15 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { tasks } from "../data/tasks";
 import { deliverables } from "../data/deliverables";
 import { apiRequest } from "../api";
 
 export default function RootLayout() {
-  const savedTasks = JSON.parse(localStorage.getItem("tasks"));
   const savedDeliverables = JSON.parse(localStorage.getItem("deliverables"));
 
   const [clientList, setClientList] = useState([]);
   const [projectList, setProjectList] = useState([]);
-  const [taskList, setTaskList] = useState(savedTasks || tasks);
+  const [taskList, setTaskList] = useState([]);
   const [deliverableList, setDeliverableList] = useState(
     savedDeliverables || deliverables,
   );
@@ -41,6 +39,19 @@ export default function RootLayout() {
     }
 
     loadClients();
+  }, []);
+
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const data = await apiRequest("/tasks");
+        setTaskList(data);
+      } catch (error) {
+        console.error("Failed to load tasks:", error);
+      }
+    }
+
+    loadTasks();
   }, []);
 
   useEffect(() => {

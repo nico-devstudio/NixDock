@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import TaskForm from "../components/TaskForm";
 import NotFound from "../components/NotFound";
+import { apiRequest } from "../api";
 
 export default function Task() {
   const { id } = useParams();
@@ -24,12 +25,22 @@ export default function Task() {
   const editButt =
     "px-4 py-2 cursor-pointer text-base rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
 
-  function handleDeleteTask(id, name) {
+  async function handleDeleteTask(id, name) {
     const confirmed = confirm(`Are you sure you want to delete ${name}?`);
 
-    if (confirmed) {
-      setTaskList((prevList) => prevList.filter((list) => list.id !== id));
+    if (!confirmed) return;
+
+    try {
+      await apiRequest(`/tasks/${id}`, {
+        method: "DELETE",
+      });
+
+      setTaskList((prevList) => prevList.filter((task) => task.id !== id));
+
       navigate("/tasks");
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+      alert(error.message);
     }
   }
 
