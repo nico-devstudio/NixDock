@@ -13,14 +13,6 @@ if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is missing from .env");
 }
 
-pool.query("SELECT NOW()")
-    .then(result => {
-        console.log(result.rows);
-    })
-    .catch(error => {
-        console.error(error);
-    });
-
 const app = express();
 
 app.use(
@@ -49,10 +41,9 @@ app.use((error, _req, res, _next) => {
 
     if (error.code === "23503") {
         return res.status(409).json({
-            message: "Cannot delete client because it has associated projects"
+            message: "Operation conflicts with a related record"
         });
     }
-
     const status = error.status || 500;
 
     return res.status(status).json({
@@ -63,6 +54,19 @@ app.use((error, _req, res, _next) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+
+async function startServer() {
+    try {
+        await pool.query("SELECT NOW()");
+        console.log("Database connected successfully");
+
+        app.listen(3000, () => {
+            console.log("Server running on port 3000");
+        });
+    } catch (error) {
+        console.error("Failed to connect to the database:", error);
+        process.exit(1);
+    }
+}
+
+startServer();

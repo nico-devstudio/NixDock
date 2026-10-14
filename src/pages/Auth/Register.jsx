@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { apiRequest } from "../../api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -18,11 +19,8 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      await apiRequest("/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           name: name.trim(),
           age: Number(age),
@@ -30,28 +28,6 @@ export default function Register() {
           password,
         }),
       });
-
-      const responseText = await response.text();
-      console.log("Status:", response.status);
-      console.log("Response:", responseText);
-
-      let data;
-
-      try {
-        data = JSON.parse(responseText);
-      } catch {
-        throw new Error(
-          "The server returned an unexpected response. Check the browser console.",
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create account.");
-      }
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create account.");
-      }
 
       navigate("/login", {
         state: { message: "Account created successfully. Please sign in." },

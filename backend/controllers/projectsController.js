@@ -36,7 +36,10 @@ const createProjectController = async (req, res, next) => {
             throw new AppError("Name is required", 400);
         }
 
-        if (!Number.isInteger(clientId) || clientId <= 0) {
+        if (
+            clientId !== null &&
+            (!Number.isInteger(clientId) || clientId <= 0)
+        ) {
             throw new AppError("A valid Client ID is required", 400);
         }
 
@@ -91,7 +94,10 @@ const updateProjectController = async (req, res, next) => {
             throw new AppError("Name is required", 400);
         }
 
-        if (!Number.isInteger(clientId) || clientId <= 0) {
+        if (
+            clientId !== null &&
+            (!Number.isInteger(clientId) || clientId <= 0)
+        ) {
             throw new AppError("A valid Client ID is required", 400);
         }
 

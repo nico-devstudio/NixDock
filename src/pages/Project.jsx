@@ -85,12 +85,16 @@ export default function Project() {
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             {project.name}
           </h1>
-          <Link
-            to={`/clients/${project.clientId}`}
-            className="text-sm text-gray-700"
-          >
-            Client: {client ? client.name : "No client found"}
-          </Link>
+          {client ? (
+            <Link
+              to={`/clients/${project.clientId}`}
+              className="text-sm text-gray-700"
+            >
+              Client: {client.name}
+            </Link>
+          ) : (
+            <p className="text-sm text-gray-500">No client assigned</p>
+          )}
           <p className="text-xs text-gray-500">
             Deadline:{" "}
             {project.deadline
@@ -135,7 +139,7 @@ export default function Project() {
                       {client.name}
                     </Link>
                   ) : (
-                    "No client found"
+                    "No client assigned"
                   )}
                 </p>
               </div>

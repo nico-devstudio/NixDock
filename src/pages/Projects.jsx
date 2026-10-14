@@ -24,13 +24,6 @@ export default function Projects() {
   } = useOutletContext();
   const projectForm = useRef();
 
-  console.log(
-    projectList.map((project) => ({
-      name: project.name,
-      deadline: project.deadline,
-    })),
-  );
-
   function handleAddProject() {
     projectForm.current.open({});
   }
@@ -117,7 +110,7 @@ export default function Projects() {
                     {project.name}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {client ? client.name : "No client found"}
+                    {client ? client.name : "No client assigned"}
                   </p>
                   <div className="flex gap-2">
                     <div className={`${actProjOuterProgStyle} flex-1`}>

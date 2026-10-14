@@ -48,7 +48,7 @@ const ProjectForm = forwardRef(function ProjectForm(
 
     const projectData = {
       name: formData.name.trim(),
-      clientId: Number(formData.clientId),
+      clientId: formData.clientId === "" ? null : Number(formData.clientId),
       status: formData.status,
       deadline: formData.deadline || null,
     };
@@ -131,17 +131,17 @@ const ProjectForm = forwardRef(function ProjectForm(
           <select
             name="clientId"
             id="client"
-            required
             value={formData.clientId}
             onChange={(event) => {
               setFormData((prev) => ({
                 ...prev,
-                clientId: Number(event.target.value),
+                clientId:
+                  event.target.value === "" ? "" : Number(event.target.value),
               }));
             }}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-500"
           >
-            <option value="">Select a client</option>
+            <option value="">No client (optional)</option>
             {clientList.map((client) => (
               <option value={client.id} key={client.id}>
                 {client.name}

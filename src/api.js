@@ -17,6 +17,12 @@ async function apiRequest(path, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
+        if (response.status === 401 && path !== "/auth/login") {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login";
+        }
+
         throw new Error(data.message || "Something went wrong");
     }
 

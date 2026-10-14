@@ -10,7 +10,7 @@ const getProjects = async (userId) => {
     projects.status,
     projects.deadline
   FROM projects
-  JOIN clients ON projects.client_id = clients.id
+  LEFT JOIN clients ON projects.client_id = clients.id
   WHERE projects.user_id = $1
 `, [userId]);
     return result.rows;
@@ -35,17 +35,19 @@ SELECT
 };
 
 const createProject = async (name, clientId, status, deadline, userId) => {
-    const clientResult = await pool.query(
-        `SELECT id
-     FROM clients
-     WHERE id = $1 AND user_id = $2`,
-        [clientId, userId]
-    );
+    if (clientId !== null && clientId !== undefined) {
+        const clientResult = await pool.query(
+            `SELECT id
+         FROM clients
+         WHERE id = $1 AND user_id = $2`,
+            [clientId, userId]
+        );
 
-    if (clientResult.rows.length === 0) {
-        const error = new Error("Client not found");
-        error.status = 404;
-        throw error;
+        if (clientResult.rows.length === 0) {
+            const error = new Error("Client not found");
+            error.status = 404;
+            throw error;
+        }
     }
 
     const result = await pool.query(
@@ -59,18 +61,22 @@ const createProject = async (name, clientId, status, deadline, userId) => {
 };
 
 const updateProject = async (id, name, clientId, status, deadline, userId) => {
-    const clientResult = await pool.query(
-        `SELECT id
-     FROM clients
-     WHERE id = $1 AND user_id = $2`,
-        [clientId, userId]
-    );
 
-    if (clientResult.rows.length === 0) {
-        const error = new Error("Client not found");
-        error.status = 404;
-        throw error;
+    if (clientId !== null && clientId !== undefined) {
+        const clientResult = await pool.query(
+            `SELECT id
+         FROM clients
+         WHERE id = $1 AND user_id = $2`,
+            [clientId, userId]
+        );
+
+        if (clientResult.rows.length === 0) {
+            const error = new Error("Client not found");
+            error.status = 404;
+            throw error;
+        }
     }
+
 
     if (deadline) {
         const taskResult = await pool.query(
