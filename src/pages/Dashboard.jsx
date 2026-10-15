@@ -78,7 +78,7 @@ export default function Dashboard() {
           name: task.name,
           projectId: task.projectId,
           status: "Completed",
-          deadline: task.deadline,
+          deadline: task.deadline?.slice(0, 10),
         }),
       });
 
