@@ -97,11 +97,9 @@ export default function Dashboard() {
         <h1 className="text-2xl font-semibold text-gray-900 mb-10 mt-1 ">
           Dashboard
         </h1>
-
         <p className="text-sm text-gray-500 mb-10">
           Good morning, Nico. Here's what's happening with your workspace.
         </p>
-
         <section className="flex flex-col gap-4 md:flex-row">
           <div className={cardsStyle}>
             <p>Clients</p>
@@ -116,7 +114,6 @@ export default function Dashboard() {
             <strong className={numbersStyle}>{taskList.length}</strong>
           </div>
         </section>
-
         <section className="mt-10">
           <div className="flex justify-between items-center mb-3">
             <h2 className={h2Style}>Active Projects</h2>
@@ -165,7 +162,6 @@ export default function Dashboard() {
             </div>
           )}
         </section>
-
         <section className="mt-10">
           <div className="flex justify-between items-center mb-3">
             <h2 className={h2Style}>Upcoming Tasks</h2>
@@ -235,7 +231,9 @@ export default function Dashboard() {
                     <p>{deliverable.name}</p>
                     <p className={`${mutedText} shrink-0`}>
                       {new Date(
-                        `${deliverable.date}T12:00:00`,
+                        deliverable.date?.includes("T")
+                          ? deliverable.date
+                          : `${deliverable.date}T12:00:00`,
                       ).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
