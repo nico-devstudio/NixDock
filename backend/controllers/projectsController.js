@@ -143,7 +143,6 @@ const updateProjectController = async (req, res, next) => {
     }
 };
 
-
 const deleteProjectController = async (req, res, next) => {
     try {
         const id = Number(req.params.id);
@@ -160,6 +159,15 @@ const deleteProjectController = async (req, res, next) => {
 
         res.json(project);
     } catch (error) {
+        if (error.code === "23503") {
+            return next(
+                new AppError(
+                    "Cannot delete this project while it has associated tasks or deliverables.",
+                    409
+                )
+            );
+        }
+
         next(error);
     }
 };

@@ -26,7 +26,7 @@ SELECT
     projects.status,
     projects.deadline
   FROM projects
-  JOIN clients ON projects.client_id = clients.id
+  LEFT JOIN clients ON projects.client_id = clients.id
   WHERE projects.id = $1
   AND projects.user_id = $2
 `, [id, userId]);

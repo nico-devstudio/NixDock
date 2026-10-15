@@ -5,7 +5,7 @@ import pool from "./db/database.js";
 import projectRoutes from "./routes/projects.js";
 import clientRoutes from "./routes/clients.js";
 import authRoutes from "./routes/auth.js";
-import taskRoutes from "./routes/tasks.js";
+import taskRoutes from "./routes/tasksRoutes.js";
 import deliverableRoutes from "./routes/deliverables.js";
 import cors from "cors";
 

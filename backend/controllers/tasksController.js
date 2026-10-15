@@ -8,6 +8,20 @@ import {
 } from "../services/tasksService.js";
 import AppError from "../utils/AppError.js";
 
+
+const isValidDate = (value) => {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return false;
+    }
+
+    const date = new Date(`${value}T00:00:00.000Z`);
+
+    return (
+        !Number.isNaN(date.getTime()) &&
+        date.toISOString().slice(0, 10) === value
+    );
+};
+
 const getTasksController = async (req, res, next) => {
     try {
         const tasks = await getTasks(req.userId);
@@ -53,8 +67,11 @@ const createTaskController = async (req, res, next) => {
             throw new AppError("Invalid task status", 400);
         }
 
-        if (!deadline) {
-            throw new AppError("Deadline is required", 400);
+        if (!isValidDate(deadline)) {
+            throw new AppError(
+                "A valid deadline is required (YYYY-MM-DD)",
+                400
+            );
         }
 
         const task = await createTask(
@@ -93,8 +110,11 @@ const updateTaskController = async (req, res, next) => {
             throw new AppError("Invalid task status", 400);
         }
 
-        if (!deadline) {
-            throw new AppError("Deadline is required", 400);
+        if (!isValidDate(deadline)) {
+            throw new AppError(
+                "A valid deadline is required (YYYY-MM-DD)",
+                400
+            );
         }
 
         const task = await updateTask(
