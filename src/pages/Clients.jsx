@@ -10,9 +10,9 @@ export default function Clients() {
   const mutedText = "text-gray-400 my-auto";
   const nameStyle = "text-gray-900 font-semibold text-base";
   const primaryButt =
-    "flex items-center self-start max-md:self-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
+    "flex items-center self-center gap-2 px-4 py-2 rounded-lg text-white bg-blue-600 transition-colors hover:bg-blue-700";
   const deleteButt =
-    "px-4 py-2 cursor-pointer self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
+    "px-4 py-2 cursor-pointer self-center max-md:self-center text-base rounded-lg text-red-600 border border-transparent hover:text-red-900 hover:bg-red-50 hover:border-red-200 transition-colors";
   const editButt =
     "px-4 py-2 cursor-pointer text-base self-center rounded-lg text-blue-600 border border-transparent hover:text-blue-900 hover:bg-blue-50 hover:border-blue-200 transition-colors";
   const clientForm = useRef();
