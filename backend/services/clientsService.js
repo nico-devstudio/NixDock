@@ -52,10 +52,11 @@ const updateClient = async (id, name, email, userId) => {
 const deleteClient = async (id, userId) => {
     const projects = await pool.query(
         `SELECT id
-     FROM projects
-     WHERE client_id = $1
-     LIMIT 1`,
-        [id],
+   FROM projects
+   WHERE client_id = $1
+     AND user_id = $2
+   LIMIT 1`,
+        [id, userId],
     );
 
     if (projects.rows.length > 0) {

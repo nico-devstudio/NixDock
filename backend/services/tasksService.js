@@ -10,7 +10,9 @@ const getTasks = async (userId) => {
        tasks.status,
        tasks.deadline
      FROM tasks
-     JOIN projects ON tasks.project_id = projects.id
+     JOIN projects
+  ON tasks.project_id = projects.id
+  AND projects.user_id = tasks.user_id
      WHERE tasks.user_id = $1
      ORDER BY tasks.id`,
         [userId],
@@ -29,7 +31,9 @@ const getTaskById = async (id, userId) => {
        tasks.status,
        tasks.deadline
      FROM tasks
-     JOIN projects ON tasks.project_id = projects.id
+     JOIN projects
+  ON tasks.project_id = projects.id
+  AND projects.user_id = tasks.user_id
      WHERE tasks.id = $1 AND tasks.user_id = $2`,
         [id, userId],
     );

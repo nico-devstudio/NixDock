@@ -9,7 +9,9 @@ const getDeliverables = async (userId) => {
        projects.name AS "projectName",
        deliverables.date
      FROM deliverables
-     JOIN projects ON deliverables.project_id = projects.id
+     JOIN projects
+  ON deliverables.project_id = projects.id
+  AND projects.user_id = deliverables.user_id
      WHERE deliverables.user_id = $1
      ORDER BY deliverables.id`,
         [userId],
@@ -28,7 +30,9 @@ const getDeliverableById = async (id, userId) => {
        projects.name AS "projectName",
        TO_CHAR(deliverables.date, 'YYYY-MM-DD') AS date
      FROM deliverables
-     JOIN projects ON deliverables.project_id = projects.id
+     JOIN projects
+  ON deliverables.project_id = projects.id
+  AND projects.user_id = deliverables.user_id
      WHERE deliverables.id = $1
        AND deliverables.user_id = $2`,
         [id, userId],

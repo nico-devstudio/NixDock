@@ -101,8 +101,11 @@ const updateDeliverableController = async (req, res, next) => {
             throw new AppError("Valid project ID is required", 400);
         }
 
-        if (!date) {
-            throw new AppError("Deliverable date is required", 400);
+        if (!isValidDate(date)) {
+            throw new AppError(
+                "A valid deliverable date is required (YYYY-MM-DD)",
+                400
+            );
         }
 
         const deliverable = await updateDeliverable(
