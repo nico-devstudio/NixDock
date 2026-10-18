@@ -10,6 +10,13 @@ NixDock helps freelancers organize client relationships and manage projects, tas
 
 This project is actively being developed as a full-stack portfolio application.
 
+## Project Status
+
+🚧 Actively developed as a full-stack portfolio project.
+
+Built to demonstrate practical experience with frontend development,
+REST API design, authentication, relational databases, and deployment.
+
 ## The Problem
 
 Freelancers and small service businesses often manage client information, project deadlines, tasks, and deliverables across different tools. This can make it difficult to track progress and keep work organized.
